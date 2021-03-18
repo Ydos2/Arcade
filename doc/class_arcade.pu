@@ -1,0 +1,182 @@
+@startuml core
+
+set namespaceSeparator ::
+
+namespace arcade {
+    namespace api {
+
+        interface ILibrary {
+
+        }
+
+        interface IComponent {
+
+        }
+
+        interface IEntity {
+
+        }
+
+        interface ISystem {
+
+        }
+
+        interface IResources {
+
+        }
+
+        interface IScene {
+
+        }
+
+        interface IApi {
+
+        }
+
+
+    }
+
+    class api {
+
+    }
+
+    namespace prefab {
+        namespace entity {
+            
+        }
+        namespace system {
+            
+        }
+        namespace component {
+            
+        }
+    }
+
+    namespace core {
+
+        class Component {
+            
+        }
+
+        class Entity {
+
+        }
+
+        class System {
+
+        }
+
+        class Scene {
+
+        }
+
+        class Library {
+
+        }
+
+        class LibraryGame {
+
+        }
+
+        class LibraryGraphic {
+
+        }
+
+        LibraryGame -up-|> Library
+        LibraryGraphic -up-|> Library
+    }
+
+    namespace resource {
+
+        class Resource {
+            - name : std::string
+        }
+         
+        class Image {
+
+        }
+         
+        class Sound {
+            
+        }
+
+        class Font {
+            
+        }
+         
+        class File {
+            
+        }
+         
+        class Entity {
+            
+        }
+
+        class Component {
+            
+        }
+         
+        class System {
+            
+        }
+
+        Entity -up-|> Resource
+        Component -up-|> Resource
+        System -up-|> Resource
+        Image -up-|> Resource
+        Font -up-|> Resource
+        Sound -up-|> Resource
+        File -up-|> Resource
+    }
+
+    class ResourceManager {
+        - images : std::unordered_map<std::string, Image>
+        - sounds : std::unordered_map<std::string, Sound>
+        - fonts : std::unordered_map<std::string, Font>
+        - files : std::unordered_map<std::string, File>
+        - objects : std::unordered_map<std::string, Entity>
+        - components : std::unordered_map<std::string, Component>
+        - systems : std::unordered_map<std::string, System>
+
+        + getRessource(name : std::string[, type : RessourceType]) const : const Ressource
+        + load(path : std::string, name : std::string[, type : RessourceType]) : bool
+        + close(name : std::string[, type : RessourceType]) : void
+    }
+
+    class SceneManager {
+        - scenes : std::unorderedMap<std::string, Scene>
+    }
+
+    class LibraryManager {
+        - games : std::unorderedMap<std::string, LibraryGame>
+        - graphics : std::unorderedMap<std::string, LibraryGraphic>
+    }
+
+    class Arcade {
+        - sceneManager : SceneManager
+        - resourceManager : ResourceManager
+        - libraryManager : LibraryManager
+
+        - exit() : int
+
+        + launch(path : std::string) : int
+    }
+
+    ResourceManager --* Arcade
+    SceneManager --* Arcade
+    LibraryManager --* Arcade
+
+    arcade::resource::Resource -up-* arcade::ResourceManager
+    arcade::core::Library -up-* arcade::LibraryManager
+    arcade::core::Scene -up-* arcade::SceneManager
+
+    arcade::core::System -up-|> arcade::api::ISystem
+    arcade::core::Entity -up-|> arcade::api::IEntity
+    arcade::core::Scene -up-|> arcade::api::IScene
+    arcade::core::Component -up-|> arcade::api::IComponent
+    arcade::core::Library -up-|> arcade::api::ILibrary
+    arcade::api -up-|> arcade::api::IApi
+
+}
+
+@enduml
