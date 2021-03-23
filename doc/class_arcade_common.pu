@@ -1,0 +1,87 @@
+@startuml arcade
+
+set namespaceSeparator ::
+
+namespace arcade {
+
+    class Library {
+        + void *file
+        + arcade::lib::ILibrary *lib
+        + std::string name
+        + std::string desc
+        + std::time_t date
+        + type_t type
+    }
+
+    class LibraryManager {
+        - std::vector<arcade::Library> games
+        - std::vector<arcade::Library> graphics
+        - arcade::lib::IGame *currentGame
+        - arcade::lib::IGraphic *currentGraphic
+        + void load(std::string path)
+        + void loadAll(std::string path)
+        + void close(std::string name)
+        + void close(arcade::lib::ILibrary *lib)
+        + void close(arcade::Library &lib)
+        + void setActive(std::string name)
+        + void setActive(arcade::lib::ILibrary *lib)
+        + void setActive(arcade::Library &lib)
+        + arcade::Library &getCurrentGame() const
+        + arcade::Library &getCurrentGraphic() const
+        + arcade::Library &get(std::string name)
+        + arcade::Library &getGame(std::size_t index)
+        + arcade::Library &getGraphic(std::size_t index)
+        + std::size_t gameLen() const
+        + std::size_t graphicLen() const
+    }
+
+    class SceneManager {
+        - std::unordered_map<std::string, arcade::IScene *> scenes
+        - arcade::IScene *current
+        + arcade::IScene *setActive(std::string name)
+        + arcade::IScene *getCurrent() const
+        + arcade::IScene *get(std::string name)
+        + void add(arcade::IScene *newScene)
+        + void close(std::string name)
+    }
+
+    class Core {
+        - LibraryManager libraryManager
+        - SceneManager sceneManager
+        - void createBios()
+        - void start()
+        - void update()
+        - void end()
+        + int execute(std::string path)
+    }
+
+    Library --* LibraryManager
+    LibraryManager --* Core
+    SceneManager --* Core
+
+    namespace lib {
+
+        interface ILibrary {
+            + init(scene)
+            + update(scene, at)
+            + end(scene)
+        }
+
+        interface IGraphic {
+        }
+
+        interface IGame {
+        }
+
+    }
+
+    class Scene
+
+    arcade::lib::ILibrary -up-* arcade::Core
+    arcade::lib::IGraphic -up-|> arcade::lib::ILibrary
+    arcade::lib::IGame -up-|> arcade::lib::ILibrary
+    arcade::Scene -up-* arcade::Core
+
+}
+
+@enduml
