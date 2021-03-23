@@ -19,14 +19,17 @@ namespace arcade { // TODO
 
     void LibraryManager::load(std::string path)
     {
+        (void) path;
     }
 
     void LibraryManager::loadAll(std::string path)
     {
+        (void) path;
     }
 
     void LibraryManager::close(std::string name)
     {
+        (void) name;
     }
 
     /* void LibraryManager::close(lib::ILibrary *lib)
@@ -39,6 +42,7 @@ namespace arcade { // TODO
 
     void LibraryManager::setActive(std::string name)
     {
+        (void) name;
     }
 
     /* void LibraryManager::setActive(lib::ILibrary *lib)
