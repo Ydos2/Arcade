@@ -26,6 +26,8 @@ add_library(sdl SHARED
 
 add_executable(arcade
     arcade_common/arcade/main.cpp
+    arcade_common/arcade/Core.cpp
+    arcade_common/arcade/SceneManager.cpp
 )
 
 target_compile_features(arcade PRIVATE cxx_std_14)
