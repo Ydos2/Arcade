@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2021
-** Visual Studio Live Share (Workspace)
+** arcade - core
 ** File description:
 ** Core
 */
@@ -18,5 +18,3 @@ namespace arcade {
     }
 
 }
-
-
