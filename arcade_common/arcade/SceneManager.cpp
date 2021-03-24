@@ -5,6 +5,7 @@
 ** SceneManager
 */
 
+#include <string>
 #include "SceneManager.hpp"
 
 namespace arcade {

@@ -6,15 +6,17 @@
 */
 
 #include "../../../common/api.h"
+#include "NCurses.hpp"
 
 void *library_create()
 {
-    return NULL;
+    auto lib = new arcade::NCurses();
+    return lib;
 }
 
 void library_delete(void *library)
 {
-    (void)library;
+    delete (arcade::NCurses *)library;
 }
 
 library_info_t library_get_data()

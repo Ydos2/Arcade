@@ -14,14 +14,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 add_library(pacman SHARED
     arcade_common/libs/games/pacman/export.cpp
+    arcade_common/libs/games/pacman/PacMan.cpp
 )
 
 add_library(ncurses SHARED
     arcade_common/libs/graphics/ncurses/export.cpp
+    arcade_common/libs/graphics/ncurses/NCurses.cpp
 )
 
 add_library(sdl SHARED
     arcade_common/libs/graphics/sdl/export.cpp
+    arcade_common/libs/graphics/sdl/Sdl.cpp
 )
 
 add_executable(arcade
@@ -36,5 +39,6 @@ target_compile_features(arcade PRIVATE cxx_std_14)
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_options(arcade PRIVATE /W4)
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_compile_options(arcade PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(arcade PRIVATE -Wall -Wextra -Wpedantic -fdiagnostics-color=always
+)
 endif()
