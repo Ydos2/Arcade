@@ -22,19 +22,20 @@ add_library(pacman SHARED
 
 target_include_directories(pacman PUBLIC "arcade_common/lib/" "arcade_common/libs/pacman")
 
-add_library(ncurses SHARED
+add_library(arcade_ncurses SHARED
     arcade_common/libs/graphics/ncurses/export.cpp
     arcade_common/libs/graphics/ncurses/NCurses.cpp
 )
+SET_TARGET_PROPERTIES(arcade_ncurses PROPERTIES PREFIX "")
+target_include_directories(arcade_ncurses PUBLIC "arcade_common/lib/" "arcade_common/libs/ncurses")
 
-target_include_directories(ncurses PUBLIC "arcade_common/lib/" "arcade_common/libs/ncurses")
-
-add_library(sdl SHARED
+add_library(arcade_sdl2 SHARED
     arcade_common/libs/graphics/sdl/export.cpp
     arcade_common/libs/graphics/sdl/Sdl.cpp
 )
+SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")
 
-target_include_directories(sdl PUBLIC "arcade_common/lib/" "arcade_common/libs/sdl")
+target_include_directories(arcade_sdl2 PUBLIC "arcade_common/lib/" "arcade_common/libs/sdl")
 
 add_executable(arcade
     arcade_common/arcade/main.cpp
