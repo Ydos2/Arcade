@@ -17,15 +17,17 @@ add_library(pacman SHARED
     arcade_common/libs/games/pacman/PacMan.cpp
 )
 
-add_library(ncurses SHARED
+add_library(arcade_ncurses SHARED
     arcade_common/libs/graphics/ncurses/export.cpp
     arcade_common/libs/graphics/ncurses/NCurses.cpp
 )
+SET_TARGET_PROPERTIES(arcade_ncurses PROPERTIES PREFIX "")
 
-add_library(sdl SHARED
+add_library(arcade_sdl2 SHARED
     arcade_common/libs/graphics/sdl/export.cpp
     arcade_common/libs/graphics/sdl/Sdl.cpp
 )
+SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")
 
 add_executable(arcade
     arcade_common/arcade/main.cpp
