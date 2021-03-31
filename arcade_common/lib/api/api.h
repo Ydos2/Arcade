@@ -15,10 +15,8 @@ extern "C"
 
 #include <time.h>
 
-typedef enum {GAME, GRAPHIC} type_t;
-
 typedef struct library_info {
-    type_t type;
+    enum {GAME, GRAPHIC} type;
     const char *name;
     time_t date;
     const char *desc;

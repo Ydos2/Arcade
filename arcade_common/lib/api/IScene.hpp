@@ -5,15 +5,14 @@
 ** Scene
 */
 
-#ifndef SCENE_HPP_
-#define SCENE_HPP_
+#ifndef _ISCENE_HPP_
+#define _ISCENE_HPP_
 
 namespace arcade {
 
-    class Scene {
+    class IScene {
         public:
-            Scene() = default;
-            ~Scene() = default;
+            ~IScene() = default;
 
         protected:
         private:
@@ -21,4 +20,4 @@ namespace arcade {
 
 }
 
-#endif /* !SCENE_HPP_ */
+#endif /* !_ISCENE_HPP_ */

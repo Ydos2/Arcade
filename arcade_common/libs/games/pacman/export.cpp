@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "../../../common/api.h"
+#include "api/api.h"
 #include "PacMan.hpp"
 
 void *library_create()
@@ -26,7 +26,7 @@ library_info_t library_get_data()
     date.tm_mon--;
     date.tm_year = date.tm_year - 1900;
     return {
-        GAME,
+        library_info_t::GAME,
         "pacman",
         mktime(&date),
         "Pac-Man is a famous maze arcade game"

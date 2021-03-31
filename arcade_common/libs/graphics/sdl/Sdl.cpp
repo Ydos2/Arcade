@@ -18,17 +18,17 @@ namespace arcade {
     {
     }
 
-    void Sdl::init(Scene &scene)
+    void Sdl::init(IScene &scene)
     {
         std::cout << "SDL init" << std::endl;
     }
 
-    void Sdl::update(Scene &scene, float dt)
+    void Sdl::update(IScene &scene, float dt)
     {
         std::cout << "SDL loop" << std::endl;
     }
 
-    void Sdl::end(Scene &scene)
+    void Sdl::end(IScene &scene)
     {
         std::cout << "SDL end" << std::endl;
     }

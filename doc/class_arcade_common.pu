@@ -13,6 +13,17 @@ namespace arcade {
         + type_t type
     }
 
+    class LibrarySet {
+        + std::vector<Library> &getList() const;
+        + Library *getCurrent();
+        + bool exist(std::string path);
+        + Library *get(std::string path);
+        + void add(const Library &lib);
+        + void remove(std::string path);
+        - std::vector<Library> m_list;
+        - Library *m_current;
+    }
+
     class LibraryManager {
         - std::vector<arcade::Library> games
         - std::vector<arcade::Library> graphics

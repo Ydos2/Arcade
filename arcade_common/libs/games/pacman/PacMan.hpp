@@ -8,7 +8,7 @@
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
 
-#include "../../../common/IGame.hpp"
+#include "api/IGame.hpp"
 
 namespace arcade {
 
@@ -17,9 +17,9 @@ namespace arcade {
             PacMan();
             ~PacMan();
 
-            void init(Scene &scene) override;
-            void update(Scene &scene, float dt) override;
-            void end(Scene &scene) override;
+            void init(IScene &scene) override;
+            void update(IScene &scene, float dt) override;
+            void end(IScene &scene) override;
         protected:
         private:
     };

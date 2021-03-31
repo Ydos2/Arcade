@@ -18,17 +18,17 @@ namespace arcade {
     {
     }
 
-    void NCurses::init(Scene &scene)
+    void NCurses::init(IScene &scene)
     {
         std::cout << "NCurses init" << std::endl;
     }
 
-    void NCurses::update(Scene &scene, float dt)
+    void NCurses::update(IScene &scene, float dt)
     {
         std::cout << "NCurses loop" << std::endl;
     }
 
-    void NCurses::end(Scene &scene)
+    void NCurses::end(IScene &scene)
     {
         std::cout << "NCurses end" << std::endl;
     }

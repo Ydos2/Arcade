@@ -20,17 +20,18 @@ namespace arcade {
 
     Scene *SceneManager::setActive(std::string name)
     {
-        _current = _scenes.at(name);
+        m_current = m_scenes.at(name);
+        return m_current;
     }
 
     Scene *SceneManager::getCurrent() const
     {
-        return (_current);
+        return (m_current);
     }
 
     Scene *SceneManager::get(std::string name)
     {
-        return (_scenes.at(name));
+        return (m_scenes.at(name));
     }
 
     void SceneManager::add(Scene *newScene) // TODO

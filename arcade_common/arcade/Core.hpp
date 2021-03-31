@@ -8,8 +8,10 @@
 #ifndef CORE_HPP_
 #define CORE_HPP_
 
-#include "./LibraryManager.hpp"
-#include "./SceneManager.hpp"
+#include "library/LibraryManager.hpp"
+#include "SceneManager.hpp"
+#include <chrono>
+#include <ctime>  
 
 namespace arcade {
 
@@ -27,8 +29,10 @@ namespace arcade {
             void end();
 
         private:
-            LibraryManager _libraryManager;
-            SceneManager _sceneManager;
+            library::LibraryManager m_libraryManager;
+            SceneManager m_sceneManager;
+            std::chrono::_V2::system_clock::time_point m_time;
+            lib::IGame *m_bios = nullptr;
     };
 
 }

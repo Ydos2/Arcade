@@ -18,17 +18,17 @@ namespace arcade {
     {
     }
 
-    void PacMan::init(Scene &scene)
+    void PacMan::init(IScene &scene)
     {
         std::cout << "PacMan init" << std::endl;
     }
 
-    void PacMan::update(Scene &scene, float dt)
+    void PacMan::update(IScene &scene, float dt)
     {
         std::cout << "PacMan loop" << std::endl;
     }
 
-    void PacMan::end(Scene &scene)
+    void PacMan::end(IScene &scene)
     {
         std::cout << "PacMan end" << std::endl;
     }

@@ -9,7 +9,7 @@
 #define SCENEMANAGER_HPP_
 
 #include <unordered_map>
-#include "../common/Scene.hpp"
+#include "Scene.hpp"
 
 namespace arcade {
 
@@ -25,8 +25,8 @@ namespace arcade {
             void close(std::string name);
 
         private:
-            std::unordered_map<std::string, Scene *> _scenes;
-            Scene *_current;
+            std::unordered_map<std::string, Scene *> m_scenes;
+            Scene *m_current;
     };
 
 }

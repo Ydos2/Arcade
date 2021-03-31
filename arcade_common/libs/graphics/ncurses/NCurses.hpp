@@ -8,7 +8,7 @@
 #ifndef NCURSES_HPP_
 #define NCURSES_HPP_
 
-#include "../../../common/IGraphic.hpp"
+#include "api/IGraphic.hpp"
 
 namespace arcade {
 
@@ -17,9 +17,9 @@ namespace arcade {
             NCurses();
             ~NCurses();
 
-            void init(Scene &scene) override;
-            void update(Scene &scene, float dt) override;
-            void end(Scene &scene) override;
+            void init(IScene &scene) override;
+            void update(IScene &scene, float dt) override;
+            void end(IScene &scene) override;
         protected:
         private:
     };

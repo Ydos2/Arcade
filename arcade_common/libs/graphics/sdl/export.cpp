@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "../../../common/api.h"
+#include "api/api.h"
 #include "Sdl.hpp"
 
 void *library_create()
@@ -26,7 +26,7 @@ library_info_t library_get_data()
     date.tm_mon--;
     date.tm_year = date.tm_year - 1900;
     return {
-        GRAPHIC,
+        library_info_t::GRAPHIC,
         "sdl2",
         mktime(&date),
         "Simple DirectMedia Layer (SDL) is a cross-platform software "

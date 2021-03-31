@@ -8,7 +8,7 @@
 #ifndef LIB_SDL_HPP_
 #define LIB_SDL_HPP_
 
-#include "../../../common/IGraphic.hpp"
+#include "api/IGraphic.hpp"
 
 namespace arcade {
 
@@ -17,9 +17,9 @@ namespace arcade {
             Sdl();
             ~Sdl();
 
-            void init(Scene &scene) override;
-            void update(Scene &scene, float dt) override;
-            void end(Scene &scene) override;
+            void init(IScene &scene) override;
+            void update(IScene &scene, float dt) override;
+            void end(IScene &scene) override;
 
         protected:
         private:
