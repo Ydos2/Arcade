@@ -5,6 +5,7 @@ add_executable(arcade
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/scene)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/library)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/core)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/error)
 
 target_compile_features(arcade PRIVATE cxx_std_14)
 target_link_libraries(arcade dl)

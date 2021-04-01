@@ -17,17 +17,24 @@ namespace scene {
 
     class SceneManager {
         public:
-            SceneManager();
-            ~SceneManager();
+            SceneManager() = default;
+            ~SceneManager() = default;
 
+            // set scene active
             Scene *setActive(std::string name);
+            // get current scene
             Scene *getCurrent() const;
+            // get current scene name
+            std::string getCurrentName() const;
+            // get scene
             Scene *get(std::string name);
-            void add(Scene *newScene);
+            // add Scene
+            void add(Scene newScene, std::string name);
+            // close scene
             void close(std::string name);
 
         private:
-            std::unordered_map<std::string, Scene *> m_scenes;
+            std::unordered_map<std::string, Scene> m_scenes;
             Scene *m_current;
     };
 

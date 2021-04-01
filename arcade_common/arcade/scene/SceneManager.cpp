@@ -7,22 +7,20 @@
 
 #include <string>
 #include "SceneManager.hpp"
+#include <iostream>
 
 namespace arcade {
 
 namespace scene {
 
-    SceneManager::SceneManager()
-    {
-    }
-
-    SceneManager::~SceneManager()
-    {
-    }
-
+    // set scene active
     Scene *SceneManager::setActive(std::string name)
     {
-        m_current = m_scenes.at(name);
+        try {
+            m_current = &(m_scenes.at(name));
+        } catch (std::exception &e) {
+            std::cerr << "The scene \"" << name << "\" does not exist." << std::endl;
+        }
         return m_current;
     }
 
@@ -33,17 +31,27 @@ namespace scene {
 
     Scene *SceneManager::get(std::string name)
     {
-        return (m_scenes.at(name));
+        try {
+            return &(m_scenes.at(name));
+        } catch (std::exception &e) {
+            std::cerr << "The scene \"" << name << "\" does not exist." << std::endl;
+        }
+        return nullptr;
     }
 
-    void SceneManager::add(Scene *newScene) // TODO
+    void SceneManager::add(Scene newScene, std::string name)
     {
-        (void) newScene;
+        this->m_scenes.insert(std::make_pair(name, newScene));
     }
 
-    void SceneManager::close(std::string name) // TODO
+    void SceneManager::close(std::string name)
     {
-        (void) name;
+        try {
+            m_scenes.at(name).close();
+            m_scenes.erase(name);
+        } catch (std::exception &e) {
+            std::cerr << "The scene \"" << name << "\" does not exist." << std::endl;
+        }
     }
 
 }

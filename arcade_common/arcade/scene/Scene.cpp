@@ -12,14 +12,9 @@ namespace arcade {
 
 namespace scene {
 
-Scene::Scene(std::string name)
+void Scene::close()
 {
-    m_name = name;
-}
 
-std::string Scene::getName() const
-{
-    return m_name;
 }
 
 }

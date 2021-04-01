@@ -24,25 +24,25 @@ namespace core {
 
     int Core::execute(std::string path)
     { 
-        scene::Scene *s = new scene::Scene("BIOS");
-    
-        this->m_sceneManager.add(s);
-        this->m_sceneManager.setActive("BIOS");
-        this->m_libraryManager.add(library::LibraryLoader::load(path));
-        this->m_libraryManager.activateFromPath(*m_sceneManager.getCurrent(), path);
-
-        this->start();
-        while (1)
+        this->start(path);
+        while (!exit)
             this->update();
         this->end();
     
         return 0;
     }
 
-    void Core::start()
+    void Core::start(std::string path)
     {
+        this->m_sceneManager.add(scene::Scene(), "BIOS");
+        scene::Scene *scene = this->m_sceneManager.setActive("BIOS");
+
+        this->m_libraryManager.add(library::LibraryLoader::load(path));
+        this->m_libraryManager.activateFromPath(*scene, path);
         this->m_libraryManager.add(library::LibraryLoader::loadAll());
         m_bios = new Bios();
+
+        m_bios->init(*scene);
 
         m_time = std::chrono::system_clock::now();
     }
@@ -78,7 +78,21 @@ namespace core {
 
     void Core::end()
     {
+        library::Library *gameLib = this->m_libraryManager.getActiveGame();
+        library::Library *graphLib = this->m_libraryManager.getActiveGraphic();
 
+        lib::IGame *game = gameLib ? gameLib->getLibrary<lib::IGame>() : m_bios;
+        lib::IGraphic *graph = graphLib->getLibrary<lib::IGraphic>();
+
+        graph->end(*m_sceneManager.getCurrent());
+
+        m_bios->end(*m_sceneManager.get("BIOS"));
+        m_sceneManager.close("BIOS");
+
+        if (game) {
+            game->end(*m_sceneManager.get("GAME"));
+            m_sceneManager.close("GAME");
+        }
     }
 
 }

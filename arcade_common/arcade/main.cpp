@@ -6,12 +6,20 @@
 */
 
 #include "core/Core.hpp"
+#include <iostream>
 
 int main(int argc, char **argv)
 {
     arcade::core::Core core;
+    int ret = 0;
 
     if (argc != 2)
         return 84;
-    return core.execute(argv[1]);
+    try {
+        ret = core.execute(argv[1]);
+    } catch (std::exception &e) {
+        std::cerr << "An unknown error occured. Aborting." << std::endl;
+        return 81;
+    }
+    return ret;
 }

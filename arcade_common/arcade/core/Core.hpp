@@ -26,7 +26,7 @@ namespace core {
 
         private:
             void createBios();
-            void start();
+            void start(std::string path);
             void update();
             void end();
 
@@ -35,6 +35,7 @@ namespace core {
             scene::SceneManager m_sceneManager;
             std::chrono::_V2::system_clock::time_point m_time;
             lib::IGame *m_bios = nullptr;
+            bool m_exit = false;
     };
 
 }

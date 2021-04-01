@@ -8,6 +8,7 @@
 #include "Library.hpp"
 #include "apiMacro.hpp"
 #include <dlfcn.h>
+#include "arcade_error.hpp"
 
 namespace arcade {
 
@@ -26,7 +27,7 @@ namespace library {
     {
         if (dlerror()) {
             this->close();
-            throw std::string("error");
+            throw arcade::error::error_lib();
         }
     }
 
@@ -56,7 +57,7 @@ namespace library {
         this->m_path = "";
 
         if (error)
-            throw dlerror();
+            throw arcade::error::error_lib();
     }
 
     std::string Library::getPath() const

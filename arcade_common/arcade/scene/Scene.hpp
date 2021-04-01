@@ -17,13 +17,13 @@ namespace scene {
 
 class Scene : public IScene {
     public:
-        Scene(std::string name);
+        Scene() = default;
         ~Scene() = default;
 
-        std::string getName() const;
+        void close();
+
     protected:
     private:
-        std::string m_name;
 };
 
 }
