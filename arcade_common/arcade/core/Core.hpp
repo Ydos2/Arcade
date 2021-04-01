@@ -9,11 +9,13 @@
 #define CORE_HPP_
 
 #include "library/LibraryManager.hpp"
-#include "SceneManager.hpp"
+#include "scene/SceneManager.hpp"
 #include <chrono>
 #include <ctime>  
 
 namespace arcade {
+
+namespace core {
 
     class Core {
         public:
@@ -30,10 +32,12 @@ namespace arcade {
 
         private:
             library::LibraryManager m_libraryManager;
-            SceneManager m_sceneManager;
+            scene::SceneManager m_sceneManager;
             std::chrono::_V2::system_clock::time_point m_time;
             lib::IGame *m_bios = nullptr;
     };
+
+}
 
 }
 

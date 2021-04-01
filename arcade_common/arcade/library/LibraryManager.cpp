@@ -116,25 +116,25 @@ namespace library {
         }
 
         // set current lib
-        void LibraryManager::activateFromPath(Scene &scene, std::string path)
+        void LibraryManager::activateFromPath(scene::Scene &scene, std::string path)
         {
             this->m_games.activateFromPath(scene, path);
             this->m_graphics.activateFromPath(scene, path);
         }
 
-        void LibraryManager::activate(Scene &scene, std::string name)
+        void LibraryManager::activate(scene::Scene &scene, std::string name)
         {
             this->m_games.activate(scene, name);
             this->m_graphics.activate(scene, name);
         }
 
-        void LibraryManager::activate(Scene &scene, const Library &lib)
+        void LibraryManager::activate(scene::Scene &scene, const Library &lib)
         {
             this->m_games.activate(scene, lib);
             this->m_graphics.activate(scene, lib);
         }
 
-        void LibraryManager::activate(Scene &scene, lib::ILibrary *lib)
+        void LibraryManager::activate(scene::Scene &scene, lib::ILibrary *lib)
         {
             this->m_games.activate(scene, lib);
             this->m_graphics.activate(scene, lib);

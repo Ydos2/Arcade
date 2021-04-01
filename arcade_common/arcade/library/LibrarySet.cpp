@@ -181,35 +181,35 @@ namespace library {
     }
 
     // set current lib
-    void LibrarySet::activateFromPath(Scene &scene, std::string path)
+    void LibrarySet::activateFromPath(scene::Scene &scene, std::string path)
     {
         std::size_t index = this->getIndexFromPath(path);
 
         this->activate(scene, index);
     }
 
-    void LibrarySet::activate(Scene &scene, std::string name)
+    void LibrarySet::activate(scene::Scene &scene, std::string name)
     {
         std::size_t index = this->getIndex(name);
 
         this->activate(scene, index);
     }
 
-    void LibrarySet::activate(Scene &scene, const Library &lib)
+    void LibrarySet::activate(scene::Scene &scene, const Library &lib)
     {
         std::size_t index = this->getIndexFromPath(lib.getPath());
 
         this->activate(scene, index);
     }
 
-    void LibrarySet::activate(Scene &scene, lib::ILibrary *lib)
+    void LibrarySet::activate(scene::Scene &scene, lib::ILibrary *lib)
     {
         std::size_t index = this->getIndex(lib);
 
         this->activate(scene, index);
     }
 
-    void LibrarySet::activate(Scene &scene, std::size_t index)
+    void LibrarySet::activate(scene::Scene &scene, std::size_t index)
     {
         if (index == std::string::npos)
             return;

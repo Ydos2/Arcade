@@ -12,6 +12,8 @@
 
 namespace arcade {
 
+namespace core {
+
 class Bios : public lib::IGame {
     public:
         Bios() = default;
@@ -24,6 +26,8 @@ class Bios : public lib::IGame {
     protected:
     private:
 };
+
+}
 
 }
 

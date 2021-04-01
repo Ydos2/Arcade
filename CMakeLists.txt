@@ -15,47 +15,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # set Verbose
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-add_library(pacman SHARED
-    arcade_common/libs/games/pacman/export.cpp
-    arcade_common/libs/games/pacman/PacMan.cpp
-)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/arcade_common/libs)
 
-target_include_directories(pacman PUBLIC "arcade_common/lib/" "arcade_common/libs/pacman")
-
-add_library(arcade_ncurses SHARED
-    arcade_common/libs/graphics/ncurses/export.cpp
-    arcade_common/libs/graphics/ncurses/NCurses.cpp
-)
-SET_TARGET_PROPERTIES(arcade_ncurses PROPERTIES PREFIX "")
-target_include_directories(arcade_ncurses PUBLIC "arcade_common/lib/" "arcade_common/libs/ncurses")
-
-add_library(arcade_sdl2 SHARED
-    arcade_common/libs/graphics/sdl/export.cpp
-    arcade_common/libs/graphics/sdl/Sdl.cpp
-)
-SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")
-
-target_include_directories(arcade_sdl2 PUBLIC "arcade_common/lib/" "arcade_common/libs/sdl")
-
-add_executable(arcade
-    arcade_common/arcade/main.cpp
-    arcade_common/arcade/Core.cpp
-    arcade_common/arcade/SceneManager.cpp
-    arcade_common/arcade/library/LibraryManager.cpp
-    arcade_common/arcade/library/Library.cpp
-    arcade_common/arcade/library/LibraryLoader.cpp
-    arcade_common/arcade/library/LibrarySet.cpp
-    arcade_common/arcade/Bios.cpp
-    arcade_common/arcade/Scene.cpp
-)
-
-target_compile_features(arcade PRIVATE cxx_std_14)
-target_link_libraries(arcade dl)
-target_include_directories(arcade PUBLIC "arcade_common/lib/" "arcade_common/arcade")
-
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_compile_options(arcade PRIVATE /W4)
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_compile_options(arcade PRIVATE -Wall -Wextra -Wpedantic -fdiagnostics-color=always
-)
-endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/arcade_common/arcade)

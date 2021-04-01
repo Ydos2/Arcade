@@ -44,10 +44,10 @@ namespace library {
             void close(const Library &lib);
             void close(lib::ILibrary *lib);
             // set current lib
-            void activateFromPath(Scene &scene, std::string path);
-            void activate(Scene &scene, std::string name);
-            void activate(Scene &scene, const Library &lib);
-            void activate(Scene &scene, lib::ILibrary *lib);
+            void activateFromPath(scene::Scene &scene, std::string path);
+            void activate(scene::Scene &scene, std::string name);
+            void activate(scene::Scene &scene, const Library &lib);
+            void activate(scene::Scene &scene, lib::ILibrary *lib);
             // Get active game
             Library *getActiveGame() const;
             // Get active graphic

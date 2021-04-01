@@ -13,6 +13,8 @@
 
 namespace arcade {
 
+namespace scene {
+
     class SceneManager {
         public:
             SceneManager();
@@ -28,6 +30,8 @@ namespace arcade {
             std::unordered_map<std::string, Scene *> m_scenes;
             Scene *m_current;
     };
+
+}
 
 }
 

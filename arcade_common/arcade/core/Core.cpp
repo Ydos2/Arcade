@@ -12,6 +12,8 @@
 
 namespace arcade { // TODO
 
+namespace core {
+
     Core::Core()
     {
     }
@@ -22,7 +24,7 @@ namespace arcade { // TODO
 
     int Core::execute(std::string path)
     { 
-        Scene *s = new Scene("BIOS");
+        scene::Scene *s = new scene::Scene("BIOS");
     
         this->m_sceneManager.add(s);
         this->m_sceneManager.setActive("BIOS");
@@ -55,7 +57,7 @@ namespace arcade { // TODO
         lib::IGame *game = gameLib ? gameLib->getLibrary<lib::IGame>() : m_bios;
         lib::IGraphic *graph = graphLib->getLibrary<lib::IGraphic>();
     
-        Scene *scene = this->m_sceneManager.getCurrent();
+        scene::Scene *scene = this->m_sceneManager.getCurrent();
     
         auto now = std::chrono::system_clock::now();
         std::chrono::duration<double> dt = now - this->m_time;
@@ -78,5 +80,7 @@ namespace arcade { // TODO
     {
 
     }
+
+}
 
 }

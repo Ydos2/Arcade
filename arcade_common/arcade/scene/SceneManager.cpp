@@ -10,6 +10,8 @@
 
 namespace arcade {
 
+namespace scene {
+
     SceneManager::SceneManager()
     {
     }
@@ -43,5 +45,7 @@ namespace arcade {
     {
         (void) name;
     }
+
+}
 
 }

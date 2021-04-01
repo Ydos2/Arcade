@@ -5,11 +5,11 @@
 ** main
 */
 
-#include "Core.hpp"
+#include "core/Core.hpp"
 
 int main(int argc, char **argv)
 {
-    arcade::Core core;
+    arcade::core::Core core;
 
     if (argc != 2)
         return 84;

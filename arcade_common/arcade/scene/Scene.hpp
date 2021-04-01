@@ -13,6 +13,8 @@
 
 namespace arcade {
 
+namespace scene {
+
 class Scene : public IScene {
     public:
         Scene(std::string name);
@@ -23,6 +25,8 @@ class Scene : public IScene {
     private:
         std::string m_name;
 };
+
+}
 
 }
 

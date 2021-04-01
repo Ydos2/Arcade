@@ -10,6 +10,8 @@
 
 namespace arcade {
 
+namespace scene {
+
 Scene::Scene(std::string name)
 {
     m_name = name;
@@ -18,6 +20,8 @@ Scene::Scene(std::string name)
 std::string Scene::getName() const
 {
     return m_name;
+}
+
 }
 
 }

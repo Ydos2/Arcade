@@ -10,6 +10,8 @@
 
 namespace arcade {
 
+namespace core {
+
 void Bios::init(IScene &scene)
 {
     (void)scene;
@@ -25,6 +27,8 @@ void Bios::update(IScene &scene, float dt)
 void Bios::end(IScene &scene)
 {
     (void)scene;
+}
+
 }
 
 }
