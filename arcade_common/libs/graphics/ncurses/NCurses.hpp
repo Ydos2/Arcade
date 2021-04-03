@@ -14,12 +14,14 @@ namespace arcade {
 
     class NCurses : lib::IGraphic {
         public:
-            NCurses();
-            ~NCurses();
+            NCurses() = default;
+            ~NCurses() = default;
 
             void init(IScene &scene) override;
             void update(IScene &scene, float dt) override;
             void end(IScene &scene) override;
+
+            bool quitRequested() const override;
         protected:
         private:
     };

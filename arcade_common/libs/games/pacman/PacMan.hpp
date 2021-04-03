@@ -14,12 +14,16 @@ namespace arcade {
 
     class PacMan : public lib::IGame {
         public:
-            PacMan();
-            ~PacMan();
+            PacMan() = default;
+            ~PacMan() = default;
 
             void init(IScene &scene) override;
             void update(IScene &scene, float dt) override;
             void end(IScene &scene) override;
+
+            void onKeyEvent(const event::KeyboardEvent& key) override;
+            void onMouseEvent(const event::MouseEvent& mouse) override;
+
         protected:
         private:
     };

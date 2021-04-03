@@ -22,6 +22,20 @@ class Scene : public IScene {
 
         void close();
 
+        void exit() const override;
+        void pushEvent(const event::IEvent& event) override;
+
+        IEntity& newEntity(std::string name) override;
+        IEntity& newEntity() override;
+        std::vector<std::reference_wrapper<IEntity>> getEntity(
+            const std::string& name) override;
+        void removeEntity(const std::string& name) override;
+        void removeEntity(const IEntity& entity) override;
+
+        void addScore(float score) override;
+
+        void forEach(std::function<void(IEntity&)>) override;
+
     protected:
     private:
 };

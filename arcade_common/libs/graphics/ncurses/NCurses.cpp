@@ -8,15 +8,8 @@
 #include "NCurses.hpp"
 #include <iostream>
 
-namespace arcade {
-
-    NCurses::NCurses()
-    {
-    }
-
-    NCurses::~NCurses()
-    {
-    }
+namespace arcade
+{
 
     void NCurses::init(IScene &scene)
     {
@@ -33,4 +26,7 @@ namespace arcade {
         std::cout << "NCurses end" << std::endl;
     }
 
+    bool NCurses::quitRequested() const
+    {
+    }
 }
