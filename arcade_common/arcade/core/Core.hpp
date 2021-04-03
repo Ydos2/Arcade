@@ -19,8 +19,8 @@ namespace core {
 
     class Core {
         public:
-            Core();
-            ~Core();
+            Core() = default;
+            ~Core() = default;
 
             int execute(std::string path);
 

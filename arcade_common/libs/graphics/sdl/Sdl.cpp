@@ -28,22 +28,22 @@ namespace arcade
             SDL_Quit();
             exit(EXIT_FAILURE);
         }
+        m_isOpen = true;
     }
 
     void Sdl::update(IScene &scene, float dt)
     {
         SDL_Event events;
-        bool isOpen{true};
 
         std::cout << "SDL loop" << std::endl;
-        while (isOpen)
+        while (m_isOpen)
         {
             while (SDL_PollEvent(&events))
             {
                 switch (events.type)
                 {
                 case SDL_QUIT:
-                    isOpen = false;
+                    m_isOpen = false;
                     break;
                 }
             }
@@ -66,5 +66,10 @@ namespace arcade
 
     bool Sdl::quitRequested() const
     {
+        if (m_isOpen)
+            return (false);
+        return (true);
+        // if ça tourne = false
+        // else ça tourne pas = true
     }
 }

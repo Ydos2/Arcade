@@ -14,18 +14,10 @@ namespace arcade { // TODO
 
 namespace core {
 
-    Core::Core()
-    {
-    }
-
-    Core::~Core()
-    {
-    }
-
     int Core::execute(std::string path)
     { 
         this->start(path);
-        while (!exit)
+        while (!m_exit)
             this->update();
         this->end();
     
@@ -69,6 +61,9 @@ namespace core {
             if (game)
                 game->update((*scene), dt.count());
             graph->update((*scene), dt.count());
+
+            if (graph->quitRequested())
+                m_exit = true;
 
             tmp_chrono = 0;
         }
