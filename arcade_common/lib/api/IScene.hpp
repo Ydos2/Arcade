@@ -5,19 +5,37 @@
 ** Scene
 */
 
-#ifndef _ISCENE_HPP_
-#define _ISCENE_HPP_
+#ifndef ISCENE_HPP_
+#define ISCENE_HPP_
+
+#include "IEntity.hpp"
+#include "event/IEvent.hpp"
+#include <string>
+#include <vector>
 
 namespace arcade {
 
-    class IScene {
-        public:
-            ~IScene() = default;
+class IScene {
+public:
+    virtual ~IScene() = default;
 
-        protected:
-        private:
-    };
+    virtual void exit() const = 0;
+    virtual void pushEvent(const event::IEvent& event) = 0;
+
+    virtual IEntity& newEntity(std::string name) = 0;
+    virtual IEntity& newEntity() = 0;
+    virtual std::vector<IEntity&> getEntity(const std::string& name) = 0;
+    virtual void removeEntity(const std::string& name) = 0;
+    virtual void removeEntity(const IEntity& entity) = 0;
+
+    virtual void addScore(float score) = 0;
+
+    virtual void forEach(std::function<void(IEntity&)>) const = 0;
+
+protected:
+private:
+};
 
 }
 
-#endif /* !_ISCENE_HPP_ */
+#endif /* !ISCENE_HPP_ */

@@ -9,20 +9,25 @@
 #define IGAME_HPP_
 
 #include "ILibrary.hpp"
+#include "event/KeyboardEvent.hpp"
+#include "event/MouseEvent.hpp"
 
 namespace arcade {
 
-    namespace lib {
+namespace lib {
 
-        class IGame : public ILibrary {
-            public:
-                virtual ~IGame() {}
+    class IGame : public ILibrary {
+    public:
+        virtual ~IGame() = default;
 
-            protected:
-            private:
-        };
+        virtual void onKeyEvent(const event::KeyboardEvent& key) = 0;
+        virtual void onMouseEvent(const event::MouseEvent& mouse) = 0;
 
-    }
+    protected:
+    private:
+    };
+
+}
 
 }
 
