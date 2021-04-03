@@ -23,6 +23,9 @@ class Bios : public lib::IGame {
         void update(IScene &scene, float dt) override;
         void end(IScene &scene) override;
 
+        void onKeyEvent(const event::KeyboardEvent& key) override;
+        void onMouseEvent(const event::MouseEvent& mouse) override;
+
     protected:
     private:
 };

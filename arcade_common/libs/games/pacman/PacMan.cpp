@@ -10,14 +10,6 @@
 
 namespace arcade {
 
-    PacMan::PacMan()
-    {
-    }
-
-    PacMan::~PacMan()
-    {
-    }
-
     void PacMan::init(IScene &scene)
     {
         std::cout << "PacMan init" << std::endl;
@@ -31,6 +23,16 @@ namespace arcade {
     void PacMan::end(IScene &scene)
     {
         std::cout << "PacMan end" << std::endl;
+    }
+
+    void PacMan::onKeyEvent(const event::KeyboardEvent& key)
+    {
+
+    }
+    
+    void PacMan::onMouseEvent(const event::MouseEvent& mouse)
+    {
+
     }
 
 }

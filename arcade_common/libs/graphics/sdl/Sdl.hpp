@@ -15,12 +15,14 @@ namespace arcade {
 
     class Sdl : lib::IGraphic {
         public:
-            Sdl();
-            ~Sdl();
+            Sdl() = default;
+            ~Sdl() = default;
 
             void init(IScene &scene) override;
             void update(IScene &scene, float dt) override;
             void end(IScene &scene) override;
+
+            bool quitRequested() const override;
 
         protected:
         private:

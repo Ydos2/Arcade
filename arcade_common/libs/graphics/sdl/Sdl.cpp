@@ -10,15 +10,6 @@
 
 namespace arcade
 {
-
-    Sdl::Sdl()
-    {
-    }
-
-    Sdl::~Sdl()
-    {
-    }
-
     void Sdl::init(IScene &scene)
     {
         std::cout << "SDL init" << std::endl;
@@ -73,4 +64,7 @@ namespace arcade
         exit(EXIT_SUCCESS);
     }
 
+    bool Sdl::quitRequested() const
+    {
+    }
 }

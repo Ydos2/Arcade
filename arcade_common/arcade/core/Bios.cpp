@@ -8,29 +8,41 @@
 #include "Bios.hpp"
 #include <iostream>
 
-namespace arcade {
-
-namespace core {
-
-void Bios::init(IScene &scene)
+namespace arcade
 {
-    (void)scene;
-    std::cout << "BIOS init" << std::endl;
-}
 
-void Bios::update(IScene &scene, float dt)
-{
-    (void)scene;
-    (void)dt;
-    std::cout << "BIOS update" << std::endl;
-}
+    namespace core
+    {
 
-void Bios::end(IScene &scene)
-{
-    std::cout << "BIOS end" << std::endl;
-    (void)scene;
-}
+        void Bios::init(IScene &scene)
+        {
+            (void)scene;
+            std::cout << "BIOS init" << std::endl;
+        }
 
-}
+        void Bios::update(IScene &scene, float dt)
+        {
+            (void)scene;
+            (void)dt;
+            std::cout << "BIOS update" << std::endl;
+        }
+
+        void Bios::end(IScene &scene)
+        {
+            std::cout << "BIOS end" << std::endl;
+            (void)scene;
+        }
+
+        void Bios::onKeyEvent(const event::KeyboardEvent& key)
+        {
+
+        }
+
+        void Bios::onMouseEvent(const event::MouseEvent& mouse)
+        {
+
+        }
+
+    }
 
 }
