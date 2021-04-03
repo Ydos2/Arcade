@@ -9,6 +9,7 @@
 #define LIB_SDL_HPP_
 
 #include "api/IGraphic.hpp"
+#include <SDL2/SDL.h>
 
 namespace arcade {
 
@@ -23,6 +24,8 @@ namespace arcade {
 
         protected:
         private:
+            SDL_Window *m_window;
+            SDL_Renderer *m_renderer;
     };
 
 }

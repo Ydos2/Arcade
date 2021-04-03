@@ -14,6 +14,5 @@ target_include_directories(arcade PUBLIC "./" "../lib/" "include/")
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_options(arcade PRIVATE /W4)
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_compile_options(arcade PRIVATE -Wall -Wextra -Wpedantic -fdiagnostics-color=always
-)
+    target_compile_options(arcade PRIVATE -Wall -Wextra -Wpedantic -fdiagnostics-color=always)
 endif()
