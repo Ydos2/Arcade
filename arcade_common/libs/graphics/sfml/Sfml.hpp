@@ -2,36 +2,30 @@
 ** EPITECH PROJECT, 2021
 ** B-OOP-400-TLS-4-1-arcade-mathias.ressort
 ** File description:
-** Sdl
+** NCurses
 */
 
-#ifndef LIB_SDL_HPP_
-#define LIB_SDL_HPP_
+#ifndef SFML_HPP_
+#define SFML_HPP_
 
 #include "api/IGraphic.hpp"
-#include <SDL2/SDL.h>
 
 namespace arcade {
 
-    class Sdl : lib::IGraphic {
+    class Sfml : lib::IGraphic {
         public:
-            Sdl() = default;
-            ~Sdl() = default;
+            Sfml() = default;
+            ~Sfml() = default;
 
             void init(IScene &scene) override;
             void update(IScene &scene, float dt) override;
             void end(IScene &scene) override;
 
             bool quitRequested() const override;
-
         protected:
         private:
-            SDL_Window *m_window;
-            SDL_Renderer *m_renderer;
-            SDL_Texture *m_texture;
-            bool m_isOpen;
     };
 
 }
 
-#endif /* !LIB_SDL_HPP_ */
+#endif /* !SFML_HPP_ */

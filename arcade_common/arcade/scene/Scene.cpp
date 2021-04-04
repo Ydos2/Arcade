@@ -28,6 +28,12 @@ namespace arcade
 
         IEntity &Scene::newEntity(std::string name)
         {
+            /*for (size_t i = 0; i < m_entity.size(); i++)
+            {
+                if (m_entity[i].get())
+            }
+            
+            m_entity.push_back()*/
         }
 
         IEntity &Scene::newEntity()
