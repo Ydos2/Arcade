@@ -35,6 +35,7 @@ namespace arcade
     {
         SDL_Event events;
 
+        (void)dt;
         std::cout << "SDL loop" << std::endl;
         while (m_isOpen)
         {
@@ -66,6 +67,11 @@ namespace arcade
 
     bool Sdl::quitRequested() const
     {
+        std::cout << "Quit request" << std::endl;
+        SDL_DestroyRenderer(m_renderer);
+        SDL_DestroyWindow(m_window);
+        SDL_Quit();
+        std::cout << "!" << std::endl;
         if (m_isOpen)
             return (false);
         return (true);
