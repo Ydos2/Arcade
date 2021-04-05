@@ -7,6 +7,7 @@
 
 #include "NCurses.hpp"
 #include <iostream>
+#include <ncurses.h>
 
 namespace arcade
 {
@@ -14,6 +15,13 @@ namespace arcade
     void NCurses::init(IScene &scene)
     {
         std::cout << "NCurses init" << std::endl;
+        initscr();
+        nodelay(stdscr, TRUE);
+        raw();
+        noecho();
+        keypad(stdscr, TRUE);
+        curs_set(0);
+        start_color();
     }
 
     void NCurses::update(IScene &scene, float dt)
@@ -24,9 +32,12 @@ namespace arcade
     void NCurses::end(IScene &scene)
     {
         std::cout << "NCurses end" << std::endl;
+        curs_set(TRUE);
+        endwin();
     }
 
     bool NCurses::quitRequested() const
     {
+        std::cout << "Quit request" << std::endl;
     }
 }
