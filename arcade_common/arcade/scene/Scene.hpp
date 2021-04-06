@@ -39,6 +39,8 @@ namespace arcade
 
             void forEach(std::function<void(IEntity &)>) override;
 
+            void setWindowSize(int x, int y) override;
+            math::Vector2 getWindowSize() const override;
         protected:
         private:
             std::vector<std::reference_wrapper<IEntity>> m_entity;
