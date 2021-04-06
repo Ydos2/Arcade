@@ -41,6 +41,7 @@ namespace arcade
 
         protected:
         private:
+            std::vector<std::reference_wrapper<IEntity>> m_entity;
         };
 
     }
