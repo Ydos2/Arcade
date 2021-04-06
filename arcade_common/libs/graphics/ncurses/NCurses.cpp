@@ -65,10 +65,10 @@ namespace arcade
 
         // Get keyboard events
         input = getch();
-        scene.pushEvent(/**/);
+        //scene.pushEvent(/**/);
 
         // Get mouse events
-        scene.pushEvent(/**/);
+        //scene.pushEvent(/**/);
 
         sortedEntities = getSortedEntities(scene);
 
