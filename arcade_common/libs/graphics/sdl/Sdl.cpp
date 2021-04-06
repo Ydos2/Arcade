@@ -35,10 +35,40 @@ namespace arcade
     {
         SDL_Event events;
 
+        (void)dt;
         std::cout << "SDL loop" << std::endl;
-        while (m_isOpen)
+        
+        /* SDL Events */
+        while (SDL_PollEvent(&events))
         {
-            while (SDL_PollEvent(&events))
+            switch (events.type)
+            {
+            case SDL_QUIT:
+                m_isOpen = false;
+                break;
+            }
+        }
+
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+        if(SDL_RenderClear(m_renderer))
+            std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
+
+        /*scene.forEach()
+        {
+
+        }*/
+        
+        /*while (m_isOpen)
+        {*/
+            /* Global Timer */
+            //Global->timer[GLOBAL_TIMER] = SDL_GetTicks();
+
+            /* Clear Screen */
+            /*if(SDL_RenderClear(m_renderer))
+                std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
+*/
+            /* SDL Events */
+            /*while (SDL_PollEvent(&events))
             {
                 switch (events.type)
                 {
@@ -49,9 +79,9 @@ namespace arcade
             }
 
             SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-            SDL_RenderClear(m_renderer);
+            //SDL_RenderClear(m_renderer);
             SDL_RenderPresent(m_renderer);
-        }
+        }*/
     }
 
     void Sdl::end(IScene &scene)
@@ -66,6 +96,11 @@ namespace arcade
 
     bool Sdl::quitRequested() const
     {
+        std::cout << "Quit request" << std::endl;
+        SDL_DestroyRenderer(m_renderer);
+        SDL_DestroyWindow(m_window);
+        SDL_Quit();
+        std::cout << "!" << std::endl;
         if (m_isOpen)
             return (false);
         return (true);

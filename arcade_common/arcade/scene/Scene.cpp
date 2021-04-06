@@ -28,6 +28,12 @@ namespace arcade
 
         IEntity &Scene::newEntity(std::string name)
         {
+            /*for (size_t i = 0; i < m_entity.size(); i++)
+            {
+                if (m_entity[i].get())
+            }
+            
+            m_entity.push_back()*/
         }
 
         IEntity &Scene::newEntity()
@@ -35,7 +41,7 @@ namespace arcade
         }
 
         std::vector<std::reference_wrapper<IEntity>> Scene::getEntity(
-            const std::string& name)
+            const std::string &name)
         {
         }
 
@@ -51,10 +57,17 @@ namespace arcade
         {
         }
 
-        void Scene::forEach(std::function<void(IEntity&)>)
+        void Scene::forEach(std::function<void(IEntity &)>)
         {
         }
 
+        void Scene::setWindowSize(int x, int y)
+        {
+        }
+
+        math::Vector2 Scene::getWindowSize() const
+        {
+        }
     }
 
 }

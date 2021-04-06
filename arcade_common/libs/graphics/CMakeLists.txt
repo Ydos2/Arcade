@@ -1,2 +1,3 @@
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ncurses)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sdl)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sfml)
