@@ -11,6 +11,9 @@
 #include "Sdl.hpp"
 #include "api/component/Transform.hpp"
 #include "api/component/Sprite.hpp"
+#include "api/component/AsciiSprite.hpp"
+#include "api/component/Sound.hpp"
+#include "api/component/Text.hpp"
 #include "api/event/KeyboardEvent.hpp"
 
 namespace arcade
@@ -97,64 +100,43 @@ namespace arcade
             std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
 
         sortedEntities = getSortedEntities(scene);
+        component::AsciiSprite *asciiSpriteComp;
+        component::Sprite *spriteComp;
+        component::Transform *transformComp;
+        component::Sound *soundComp;
+        component::Text *textComp;
 
-        scene.forEach([&](IEntity& currentEnt) {
-            // ici get la sprite et texture
-            component::Sprite *sprite;
-            component::Transform *transform;
-
-            if (sprite && transform)
-            {
-                SDL_Rect rect;
-                rect.x = int(transform->position.x);
-                rect.y = int(transform->position.y);
-                rect.w = sprite->width;
-                rect.h = sprite->height;
-                SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(sprite->pixels.data(),
-                    sprite->width, sprite->height, 32, 4 * sprite->width,
-                    0, 0, 0, 255);
-                SDL_Texture *textureSdl = SDL_CreateTextureFromSurface(m_renderer, surface);
-
-                SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
-                SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
-                SDL_FreeSurface(surface);
-            }
+        sortedEntities[0].get().forEach([&](arcade::component::IComponent& comp)
+        {
+            if (auto ptr = dynamic_cast<component::AsciiSprite*>(&comp))
+                asciiSpriteComp = ptr;
+            else if (auto ptr = dynamic_cast<component::Sprite*>(&comp))
+                spriteComp = ptr;
+            else if (auto ptr = dynamic_cast<component::Transform*>(&comp))
+                transformComp = ptr;
+            else if (auto ptr = dynamic_cast<component::Sound*>(&comp))
+                soundComp = ptr;
+            else if (auto ptr = dynamic_cast<component::Text*>(&comp))
+                textComp = ptr;
         });
 
+        if (spriteComp && transformComp) {
+            SDL_Rect rect;
+            rect.x = int(transformComp->position.x);
+            rect.y = int(transformComp->position.y);
+            rect.w = spriteComp->width;
+            rect.h = spriteComp->height;
+            SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
+                spriteComp->width, spriteComp->height, 32, 4 * spriteComp->width,
+                0, 0, 0, 255);
+            SDL_Texture *textureSdl = SDL_CreateTextureFromSurface(m_renderer, surface);
+
+            SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
+            SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
+            SDL_FreeSurface(surface);
+        }
+
         SDL_RenderPresent(m_renderer);
-
-        //component::IComponent component;
-        //sortedEntities[0]._M_data->addComponent(component);
-
-        /*scene.forEach()
-        {
-
-        }*/
-        
-        /*while (m_isOpen)
-        {*/
-            /* Global Timer */
-            //Global->timer[GLOBAL_TIMER] = SDL_GetTicks();
-
-            /* Clear Screen */
-            /*if(SDL_RenderClear(m_renderer))
-                std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
-*/
-            /* SDL Events */
-            /*while (SDL_PollEvent(&events))
-            {
-                switch (events.type)
-                {
-                case SDL_QUIT:
-                    m_isOpen = false;
-                    break;
-                }
-            }
-
-            SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-            //SDL_RenderClear(m_renderer);
-            SDL_RenderPresent(m_renderer);
-        }*/
     }
 
     void Sdl::end(IScene &scene)
