@@ -27,15 +27,15 @@ namespace arcade
             exit(EXIT_FAILURE);
         }
 
-        SDL_Window *pWindow{nullptr};
-        SDL_Renderer *pRenderer{nullptr};
-
-        if (SDL_CreateWindowAndRenderer(800, 600, SDL_WINDOW_SHOWN, &m_window, &m_renderer) < 0)
+        if (SDL_CreateWindow("Arcade", SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED, 600, 640, 0) < 0)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());
             SDL_Quit();
             exit(EXIT_FAILURE);
         }
+        m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+        SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
         m_isOpen = true;
     }
 
@@ -100,41 +100,46 @@ namespace arcade
             std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
 
         sortedEntities = getSortedEntities(scene);
+
         component::AsciiSprite *asciiSpriteComp;
         component::Sprite *spriteComp;
         component::Transform *transformComp;
         component::Sound *soundComp;
         component::Text *textComp;
-
-        sortedEntities[0].get().forEach([&](arcade::component::IComponent& comp)
+        
+        for (size_t i = 0; i < sortedEntities.size(); i++)
         {
-            if (auto ptr = dynamic_cast<component::AsciiSprite*>(&comp))
-                asciiSpriteComp = ptr;
-            else if (auto ptr = dynamic_cast<component::Sprite*>(&comp))
-                spriteComp = ptr;
-            else if (auto ptr = dynamic_cast<component::Transform*>(&comp))
-                transformComp = ptr;
-            else if (auto ptr = dynamic_cast<component::Sound*>(&comp))
-                soundComp = ptr;
-            else if (auto ptr = dynamic_cast<component::Text*>(&comp))
-                textComp = ptr;
-        });
+            sortedEntities[i].get().forEach([&](arcade::component::IComponent& comp)
+            {
+                if (auto ptr = dynamic_cast<component::AsciiSprite*>(&comp))
+                    asciiSpriteComp = ptr;
+                else if (auto ptr = dynamic_cast<component::Sprite*>(&comp))
+                    spriteComp = ptr;
+                else if (auto ptr = dynamic_cast<component::Transform*>(&comp))
+                    transformComp = ptr;
+                else if (auto ptr = dynamic_cast<component::Sound*>(&comp))
+                    soundComp = ptr;
+                else if (auto ptr = dynamic_cast<component::Text*>(&comp))
+                    textComp = ptr;
+            });
 
-        if (spriteComp && transformComp) {
-            SDL_Rect rect;
-            rect.x = int(transformComp->position.x);
-            rect.y = int(transformComp->position.y);
-            rect.w = spriteComp->width;
-            rect.h = spriteComp->height;
-            SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
-                spriteComp->width, spriteComp->height, 32, 4 * spriteComp->width,
-                0, 0, 0, 255);
-            SDL_Texture *textureSdl = SDL_CreateTextureFromSurface(m_renderer, surface);
+            if (spriteComp && transformComp) {
+                SDL_Rect rect;
+                rect.x = int(transformComp->position.x);
+                rect.y = int(transformComp->position.y);
+                rect.w = spriteComp->width;
+                rect.h = spriteComp->height;
+                SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
+                    spriteComp->width, spriteComp->height, 32, 4 * spriteComp->width,
+                    0, 0, 0, 255);
+                SDL_Texture *textureSdl = SDL_CreateTextureFromSurface(m_renderer, surface);
 
-            SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
-            SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
-            SDL_FreeSurface(surface);
+                SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
+                SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
+                SDL_FreeSurface(surface);
+            }
         }
+        
 
         SDL_RenderPresent(m_renderer);
     }
@@ -144,18 +149,12 @@ namespace arcade
         std::cout << "SDL end" << std::endl;
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
-        SDL_Quit();
-
-        exit(EXIT_SUCCESS);
     }
 
     bool Sdl::quitRequested() const
     {
         std::cout << "Quit request" << std::endl;
-        SDL_DestroyRenderer(m_renderer);
-        SDL_DestroyWindow(m_window);
         SDL_Quit();
-        std::cout << "!" << std::endl;
         if (m_isOpen)
             return (false);
         return (true);
