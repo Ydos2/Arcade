@@ -11,6 +11,12 @@
 #include "IComponent.hpp"
 #include <vector>
 
+
+namespace arcade {
+
+/**
+ * @brief An ARGB colour
+ */
 struct Color {
     char a;
     char r;
@@ -18,10 +24,11 @@ struct Color {
     char b;
 };
 
-namespace arcade {
-
 namespace component {
 
+    /**
+     * @brief Component representing a sprite made out of 32-bits ARGB pixels
+     */
     struct Sprite : public IComponent {
         std::vector<Color> pixels;
         size_t width;
