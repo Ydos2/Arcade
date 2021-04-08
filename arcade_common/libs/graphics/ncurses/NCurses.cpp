@@ -12,6 +12,7 @@
 #include "NCurses.hpp"
 #include "api/component/Transform.hpp"
 #include "api/event/KeyboardEvent.hpp"
+#include "api/event/MouseEvent.hpp"
 
 namespace arcade
 {
@@ -55,25 +56,50 @@ namespace arcade
         return (entities);
     }
 
+    static event::KeyboardEvent pushKeyboardEvent(IScene &scene)
+    {
+        event::KeyboardEvent keyboardEvent;
+        std::vector<int> keys;
+        std::vector<int> oldKeys;
+        int c;
+
+        while ((c = getch()) != ERR)
+            keys.push_back(c);
+        for (int i = 0; i != keys.size(); i++) {
+            keyboardEvent.key = event::Key::KEY_0; // TODO
+            if (std::count(oldKeys.begin(), oldKeys.end(), keys[i]))
+                keyboardEvent.action = event::KeyboardEvent::DOWN;
+            else 
+                keyboardEvent.action = event::KeyboardEvent::PRESSED;
+            scene.pushEvent(keyboardEvent);
+        }
+        for (int i = 0; i != oldKeys.size(); i++) {
+            keyboardEvent.key = event::Key::KEY_0; // TODO
+            if (!std::count(keys.begin(), keys.end(), oldKeys[i]))
+                keyboardEvent.action = event::KeyboardEvent::RELEASED;
+            scene.pushEvent(keyboardEvent);
+        }
+        oldKeys = keys;
+    }
+
+    static event::MouseEvent pushMouseEvent(IScene &scene)
+    {
+        event::MouseEvent mouseEvent;
+
+        scene.pushEvent(mouseEvent);
+    }
+
     void NCurses::update(IScene &scene, float dt)
     {
         std::vector<std::reference_wrapper<IEntity>> sortedEntities;
-        event::KeyboardEvent keyboardEvent;
-        char input = 0;
 
-        std::cout << "NCurses loop" << std::endl;
-
-        // Get keyboard events
-        input = getch();
-        scene.pushEvent(/**/);
-
-        // Get mouse events
-        scene.pushEvent(/**/);
+        std::cout << "NCurses loop" << std::endl;        
+        pushKeyboardEvent(scene);
+        pushMouseEvent(scene);
 
         sortedEntities = getSortedEntities(scene);
-
         // Get vector of entities' sprites
-        // ?
+        
 
         // Display entities' sprites
 
