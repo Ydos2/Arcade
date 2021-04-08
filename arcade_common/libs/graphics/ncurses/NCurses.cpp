@@ -11,6 +11,10 @@
 #include <ncurses.h>
 #include "NCurses.hpp"
 #include "api/component/Transform.hpp"
+#include "api/component/Sprite.hpp"
+#include "api/component/AsciiSprite.hpp"
+#include "api/component/Sound.hpp"
+#include "api/component/Text.hpp"
 #include "api/event/KeyboardEvent.hpp"
 #include "api/event/MouseEvent.hpp"
 
@@ -59,8 +63,9 @@ namespace arcade
     static event::Key ncursesKeyToArcadeKey(char ncursesKey)
     {
         std::vector<char> ncursesKeys = {
-            (char)KEY_EXIT, (char)KEY_BACKSPACE,
-            (char)KEY_RIGHT, (char)KEY_LEFT, (char)KEY_UP, (char)KEY_DOWN,
+            (char)KEY_EXIT, (char)NCURSES_KEY_BACKSPACE,
+            (char)NCURSES_KEY_RIGHT, (char)NCURSES_KEY_LEFT,
+            (char)NCURSES_KEY_UP, (char)NCURSES_KEY_DOWN,
             0, // KEY_SHIFT_LEFT,
             0, // KEY_SHIFT_RIGHT,
             0, // KEY_CTRL_LEFT,
@@ -68,12 +73,12 @@ namespace arcade
             0, // KEY_ALT_LEFT,
             0, // KEY_ALT_RIGHT,
             '\t', (char)KEY_NPAGE, (char)KEY_PPAGE, (char)KEY_DC, (char)KEY_IC,
-            (char)KEY_END, ' ', (char)KEY_F(1), (char)KEY_F(2), (char)KEY_F(3),
-            (char)KEY_F(4), (char)KEY_F(5), (char)KEY_F(6), (char)KEY_F(7),
-            (char)KEY_F(8), (char)KEY_F(9), (char)KEY_F(10), (char)KEY_F(11),
-            (char)KEY_F(12), 'A','B','C','D','E','F','G','H','I','J','K','L',
-            'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3',
-            '4','5','6','7','8','9','0'
+            (char)NCURSES_KEY_END, ' ', (char)KEY_F(1), (char)KEY_F(2),
+            (char)KEY_F(3), (char)KEY_F(4), (char)KEY_F(5), (char)KEY_F(6),
+            (char)KEY_F(7), (char)KEY_F(8), (char)KEY_F(9), (char)KEY_F(10),
+            (char)KEY_F(11), (char)KEY_F(12), 'A','B','C','D','E','F','G','H',
+            'I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y',
+            'Z','1','2','3','4','5','6','7','8','9','0'
         };
 
         std::vector<event::Key> arcadeKeys(67);
@@ -128,6 +133,10 @@ namespace arcade
     void NCurses::update(IScene &scene, float dt)
     {
         std::vector<std::reference_wrapper<IEntity>> sortedEntities;
+        component::Transform *transform;
+        component::AsciiSprite *asciiSprite;
+        component::Sound *sound;
+        component::Text *text;
 
         std::cout << "NCurses loop" << std::endl;
         pushKeyboardEvent(scene);
@@ -135,10 +144,20 @@ namespace arcade
 
         (void)dt;
         sortedEntities = getSortedEntities(scene);
-        // Get vector of entities' sprites
-        
+        for (std::reference_wrapper<IEntity> entity : sortedEntities) {
+            entity.get().forEach([&](arcade::component::IComponent& component) {
+                if (auto ptr = dynamic_cast<component::AsciiSprite*>(&component))
+                    asciiSprite = ptr;
+                else if (auto ptr = dynamic_cast<component::Transform*>(&component))
+                    transform = ptr;
+                else if (auto ptr = dynamic_cast<component::Sound*>(&component))
+                    sound = ptr;
+                else if (auto ptr = dynamic_cast<component::Text*>(&component))
+                    text = ptr;
+            });
+            // Display sprites and text with transforms, manage sound
+        }
 
-        // Display entities' sprites
 
     }
 

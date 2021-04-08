@@ -10,6 +10,19 @@
 
 #include "IEvent.hpp"
 
+#define NCURSES_KEY_BACKSPACE 0407
+#define NCURSES_KEY_RIGHT 0405
+#define NCURSES_KEY_LEFT 0404
+#define NCURSES_KEY_UP 0403
+#define NCURSES_KEY_DOWN 0402
+#define NCURSES_KEY_END 0550
+#undef KEY_BACKSPACE
+#undef KEY_RIGHT
+#undef KEY_LEFT
+#undef KEY_UP
+#undef KEY_DOWN
+#undef KEY_END
+
 namespace arcade {
 
 namespace event {
