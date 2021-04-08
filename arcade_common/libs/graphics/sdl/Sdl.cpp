@@ -139,7 +139,6 @@ namespace arcade
                 SDL_FreeSurface(surface);
             }
         }
-        
 
         SDL_RenderPresent(m_renderer);
     }
