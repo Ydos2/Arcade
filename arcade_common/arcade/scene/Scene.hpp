@@ -43,7 +43,9 @@ namespace arcade
             math::Vector2 getWindowSize() const override;
         protected:
         private:
+            bool m_exitState;
             std::vector<std::reference_wrapper<IEntity>> m_entity;
+            math::Vector2 m_windowSize;
         };
 
     }
