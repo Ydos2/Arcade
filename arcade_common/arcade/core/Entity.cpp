@@ -27,7 +27,7 @@ namespace core {
 
     void Entity::removeComponent(const component::IComponent& component)
     {
-        for (int i = 0; i < m_components.size(); i++) {
+        for (std::size_t i = 0; i < m_components.size(); i++) {
             if (&component == m_components[i].get()) {
                 m_components.erase(m_components.begin() + i);
                 return;

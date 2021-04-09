@@ -19,9 +19,14 @@ namespace library {
     }
 
     // get active lib
-    Library *LibrarySet::getActive() const
+    Library *LibrarySet::getActive()
     {
-        return this->m_current;
+        for (auto &lib : this->m_list) {
+            if (lib.getPath() == this->m_current) {
+                return &lib;
+            }
+        }
+        return nullptr;
     }
 
     // add lib
@@ -174,7 +179,7 @@ namespace library {
     {
         if (index == std::string::npos)
             return;
-        if (this->m_list[index].getLibrary() == this->m_current->getLibrary())
+        if (this->m_list[index].getLibrary() == this->getActive()->getLibrary())
             this->m_current = nullptr;
         this->m_list[index].close();
         this->m_list.erase(this->m_list.begin() + index);
@@ -206,8 +211,10 @@ namespace library {
     {
         if (index == std::string::npos)
             return;
-        this->m_current = &(this->m_list[index]);
-        this->m_current->getLibrary()->init(scene);
+        arcade::library::Library &current = this->m_list[index];
+
+        this->m_current = current.getPath();
+        current.getLibrary()->init(scene);
     }
 
     // get len

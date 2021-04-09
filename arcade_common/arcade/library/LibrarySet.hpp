@@ -12,6 +12,7 @@
 #include "api/ILibrary.hpp"
 #include "scene/Scene.hpp"
 #include <vector>
+#include <list>
 
 namespace arcade {
 
@@ -25,7 +26,7 @@ namespace library {
             // get whole lib list
             std::vector<Library> &getList();
             // get active lib
-            Library *getActive() const;
+            Library *getActive();
             // add lib
             void add(const Library &lib);
             // search lib
@@ -60,7 +61,7 @@ namespace library {
         protected:
         private:
             std::vector<Library> m_list;
-            Library *m_current = nullptr;
+            std::string m_current = "";
     };
 
 }

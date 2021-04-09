@@ -50,9 +50,9 @@ namespace library {
             // force activation graphic library
             void forceActivate(scene::Scene &scene);
             // Get active game
-            Library *getActiveGame() const;
+            Library *getActiveGame();
             // Get active graphic
-            Library *getActiveGraphic() const;
+            Library *getActiveGraphic();
             // Get game
             std::vector<Library> &getGames();
             // Get graphic
