@@ -23,7 +23,7 @@ namespace arcade
 
     void NCurses::init(IScene &scene)
     {
-        std::cout << "NCurses init" << std::endl;
+        (void)scene;
         initscr();
         nodelay(stdscr, TRUE);
         raw();
@@ -152,7 +152,7 @@ namespace arcade
             event::Key::KEY_0,
         };
 
-        for (auto i = 0; i != ncursesKeys.size(); i++) {
+        for (size_t i = 0; i != ncursesKeys.size(); i++) {
             if (ncursesKeys[i] == ncursesKey)
                 return (arcadeKeys[i]);
         }
@@ -163,7 +163,7 @@ namespace arcade
     {
         event::KeyboardEvent keyboardEvent;
         std::vector<char> keys;
-        std::vector<char> oldKeys;
+        static std::vector<char> oldKeys;
         char c;
 
         while ((c = getch()) != ERR)
@@ -192,6 +192,29 @@ namespace arcade
         scene.pushEvent(mouseEvent);
     }
 
+    static void displayEntity(component::AsciiSprite *sprite,
+                                component::Transform *transform)
+    {
+        int windowWidth = 0;
+        int windowHeight = 0;
+        int spriteX = 0;
+        int spriteY = 0;
+
+        getmaxyx(stdscr, windowHeight, windowWidth);
+        spriteX = transform->position.x;
+        spriteY = windowHeight - transform->position.y - sprite->height;
+        for (size_t i = 0; i < sprite->height; i++) {
+            for (size_t j = 0; j < sprite->width; j++) {
+                std::vector<char> vectorSprite = *(sprite->sprite.get());
+                mvaddch(
+                    spriteY + i,
+                    spriteX + j,
+                    vectorSprite[i * sprite->width + j]
+                );
+            }
+        }
+    }
+
     void NCurses::update(IScene &scene, float dt)
     {
         std::vector<std::reference_wrapper<IEntity>> sortedEntities;
@@ -200,7 +223,6 @@ namespace arcade
         component::Sound *sound;
         component::Text *text;
 
-        std::cout << "NCurses loop" << std::endl;
         pushKeyboardEvent(scene);
         pushMouseEvent(scene);
 
@@ -217,27 +239,21 @@ namespace arcade
                 else if (auto ptr = dynamic_cast<component::Text*>(&component))
                     text = ptr;
             });
-            // Display sprites and text with transforms, manage sound
+            displayEntity(asciiSprite, transform);
+            // TODO: display text, manage sound
+            refresh();
         }
-
-
     }
 
     void NCurses::end(IScene &scene)
     {
         (void)scene;
-        std::cout << "NCurses end" << std::endl;
         curs_set(TRUE);
         endwin();
     }
 
     bool NCurses::quitRequested() const
     {
-        std::cout << "Quit request" << std::endl;
-        curs_set(TRUE);
-        endwin();
-        if (m_isOpen)
-            return (false);
-        return (true);
+        return (false);
     }
 }
