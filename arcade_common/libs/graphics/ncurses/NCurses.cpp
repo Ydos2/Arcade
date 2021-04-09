@@ -31,6 +31,7 @@ namespace arcade
         keypad(stdscr, TRUE);
         curs_set(0);
         start_color();
+        m_isOpen = true;
     }
 
     static std::vector<std::reference_wrapper<IEntity>> getSortedEntities(
@@ -235,6 +236,8 @@ namespace arcade
         std::cout << "Quit request" << std::endl;
         curs_set(TRUE);
         endwin();
-        return (true); // TODO
+        if (m_isOpen)
+            return (false);
+        return (true);
     }
 }

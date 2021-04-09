@@ -22,8 +22,8 @@ namespace arcade {
             void end(IScene &scene) override;
 
             bool quitRequested() const override;
-        protected:
         private:
+            bool m_isOpen;
     };
 
 }
