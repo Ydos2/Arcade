@@ -17,75 +17,88 @@ namespace arcade
     namespace scene
     {
 
-        void Scene::close()
+        void Scene::exit()
         {
-        }
-
-        void Scene::exit() const
-        {
-            //if (m_exitState)
-            // exit
+            m_exitState = true;
         }
 
         void Scene::pushEvent(const event::IEvent &event)
         {
-            if (arcade::event::KeyboardEvent const *keyEvent =
-                dynamic_cast<const event::KeyboardEvent *>(&event))
-            {
-                //auto actionEvent = il faut get les event
-                //if (actionEvent)
-                //faire l'event 
-            }
-            else if (arcade::event::MouseEvent const * keyEvent =
-                dynamic_cast<const event::MouseEvent *>(&event))
-            {
-                //auto actionEvent = il faut get les event
-                //if (actionEvent)
-                //faire l'event
-            }
+            try {
+                const event::KeyboardEvent &keyEvent =
+                dynamic_cast<const event::KeyboardEvent &>(event);
+
+                this->m_keyBoardEvent.push_back(keyEvent);
+                return;
+            } catch (std::exception &e) {}
+
+            try {
+                const event::MouseEvent &mouseEvent =
+                dynamic_cast<const event::MouseEvent &>(event);
+
+                this->m_mouseEvent.push_back(mouseEvent);
+                return;
+            } catch (std::exception &e) {}
         }
 
         IEntity &Scene::newEntity(std::string name)
-        {
-            /*for (size_t i = 0; i < m_entity.size(); i++)
-            {
-                if (m_entity[i].get())
-            }
-            
-            m_entity.push_back()*/
+        { 
+            m_entity.push_back(core::Entity(name));
+
+            return m_entity.back();
         }
 
         IEntity &Scene::newEntity()
         {
+            return this->newEntity("");
         }
 
         std::vector<std::reference_wrapper<IEntity>> Scene::getEntity(
             const std::string &name)
         {
+            std::vector<std::reference_wrapper<IEntity>> ret;
+
+            for (core::Entity &ent : m_entity) {
+                if (ent.getName() == name)
+                    ret.push_back(ent);
+            }
+            return ret;
         }
 
         void Scene::removeEntity(const std::string &name)
         {
+            for (std::size_t i = 0; i < m_entity.size(); i++) {
+                if (m_entity[i].getName() == name)
+                    m_entity.erase(m_entity.begin() + i);
+            }
         }
 
         void Scene::removeEntity(const IEntity &entity)
         {
-            for (std::reference_wrapper<arcade::IEntity> i : m_entity)
-            {
-                /*if (i == entity)
-                {
+            const core::Entity& ent = static_cast<const core::Entity&>(entity);
 
-                }*/
+            for (std::size_t i = 0; i < m_entity.size(); i++) {
+                if (m_entity[i] == ent)
+                    m_entity.erase(m_entity.begin() + i);
             }
         }
 
         void Scene::addScore(float score)
         {
+            m_score = score;
         }
 
         void Scene::forEach(std::function<void(IEntity &)> comp)
         {
             std::for_each(m_entity.begin(), m_entity.end(), comp);
+        }
+
+        void Scene::forEach(std::function<void(IEntity&)> fun, const std::string& name)
+        {
+            for (std::size_t i = 0; i < m_entity.size(); i++) {
+                if (m_entity[i].getName() == name)
+                    fun(m_entity[i]);
+            }
         }
 
         void Scene::setWindowSize(int x, int y)
@@ -97,6 +110,22 @@ namespace arcade
         math::Vector2 Scene::getWindowSize() const
         {
             return m_windowSize;
+        }
+
+        std::vector<event::KeyboardEvent> Scene::pullKeyBoardEvents()
+        {
+            std::vector<event::KeyboardEvent> ret = m_keyBoardEvent;
+
+            m_keyBoardEvent.clear();
+            return ret;
+        }
+
+        std::vector<event::MouseEvent> Scene::pullMouseEvents()
+        {
+            std::vector<event::MouseEvent> ret = m_mouseEvent;
+
+            m_mouseEvent.clear();
+            return ret;
         }
     }
 

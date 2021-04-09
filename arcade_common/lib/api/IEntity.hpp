@@ -41,8 +41,7 @@ public:
      *
      * @param fun
      */
-    virtual void forEach(
-        std::function<void(component::IComponent&)> fun) const = 0;
+    virtual void forEach(std::function<void(component::IComponent&)> fun) = 0;
 
 protected:
 private:

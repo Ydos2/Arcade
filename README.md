@@ -75,7 +75,7 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 <summary>fedora</summary>
 
 ```sh
-sudo yum install SDL2-devel
+sudo dnf install SDL2-devel
 ```
 </details>
 <details>

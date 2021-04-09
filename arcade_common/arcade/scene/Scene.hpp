@@ -10,6 +10,9 @@
 
 #include <string>
 #include "api/IScene.hpp"
+#include "api/event/KeyboardEvent.hpp"
+#include "api/event/MouseEvent.hpp"
+#include "core/Entity.hpp"
 
 namespace arcade
 {
@@ -25,27 +28,34 @@ namespace arcade
 
             void close();
 
-            void exit() const override;
+            void exit() override;
             void pushEvent(const event::IEvent &event) override;
 
             IEntity &newEntity(std::string name) override;
             IEntity &newEntity() override;
-            std::vector<std::reference_wrapper<IEntity>> getEntity(
-                const std::string &name) override;
+            std::vector<std::reference_wrapper<IEntity>> getEntity(const std::string &name) override;
             void removeEntity(const std::string &name) override;
             void removeEntity(const IEntity &entity) override;
 
             void addScore(float score) override;
 
             void forEach(std::function<void(IEntity &)>) override;
+            void forEach(std::function<void(IEntity&)>, const std::string& name) override;
 
             void setWindowSize(int x, int y) override;
             math::Vector2 getWindowSize() const override;
+
+            std::vector<event::KeyboardEvent> pullKeyBoardEvents();
+            std::vector<event::MouseEvent> pullMouseEvents();
+
         protected:
         private:
             bool m_exitState;
-            std::vector<std::reference_wrapper<IEntity>> m_entity;
+            std::vector<core::Entity> m_entity;
             math::Vector2 m_windowSize;
+            std::vector<event::KeyboardEvent> m_keyBoardEvent;
+            std::vector<event::MouseEvent> m_mouseEvent;
+            float m_score;
         };
 
     }
