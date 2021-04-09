@@ -192,7 +192,7 @@ namespace arcade
         scene.pushEvent(mouseEvent);
     }
 
-    static void displayEntity(component::AsciiSprite *sprite,
+    static void displayAsciiSprite(component::AsciiSprite *sprite,
                                 component::Transform *transform)
     {
         int windowWidth = 0;
@@ -213,6 +213,20 @@ namespace arcade
                 );
             }
         }
+    }
+
+    static void displayText(component::Text *text,
+                                component::Transform *transform)
+    {
+        int windowWidth = 0;
+        int windowHeight = 0;
+        int spriteX = 0;
+        int spriteY = 0;
+
+        getmaxyx(stdscr, windowHeight, windowWidth);
+        spriteX = transform->position.x;
+        spriteY = windowHeight - transform->position.y - 1;
+        mvprintw(spriteY, spriteX, text->text.c_str());
     }
 
     void NCurses::update(IScene &scene, float dt)
@@ -239,8 +253,11 @@ namespace arcade
                 else if (auto ptr = dynamic_cast<component::Text*>(&component))
                     text = ptr;
             });
-            displayEntity(asciiSprite, transform);
-            // TODO: display text, manage sound
+            if (asciiSprite && transform)
+                displayAsciiSprite(asciiSprite, transform);
+            else if (text && transform)
+                displayText(text, transform);
+            // TODO: manage sound
             refresh();
         }
     }
