@@ -22,11 +22,11 @@ namespace core {
             Core() = default;
             ~Core() = default;
 
-            int execute(std::string path);
+            int execute(std::string path = "");
 
         private:
             void createBios();
-            void start(std::string path);
+            bool start(std::string path);
             void update();
             void end();
 
