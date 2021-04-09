@@ -141,13 +141,13 @@ namespace library {
         }
 
         // Get active game
-        Library *LibraryManager::getActiveGame() const
+        Library *LibraryManager::getActiveGame()
         {
             return this->m_games.getActive();
         }
 
         // Get active graphic
-        Library *LibraryManager::getActiveGraphic() const
+        Library *LibraryManager::getActiveGraphic()
         {
             Library *graph = this->m_graphics.getActive();
 

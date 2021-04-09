@@ -13,12 +13,18 @@ namespace arcade
 
     void Sfml::init(IScene &scene)
     {
-        std::cout << "Sfml init" << std::endl;
+        m_window.create(sf::VideoMode(800, 600), "arcade");
+        m_window.setVerticalSyncEnabled(true);
     }
 
     void Sfml::update(IScene &scene, float dt)
     {
-        std::cout << "Sfml loop" << std::endl;
+        sf::Event event;
+        while (m_window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                m_window.close();
+        }
     }
 
     void Sfml::end(IScene &scene)
@@ -28,5 +34,8 @@ namespace arcade
 
     bool Sfml::quitRequested() const
     {
+        if (m_window.isOpen())
+            return false;
+        return true;
     }
 }
