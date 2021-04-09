@@ -9,6 +9,7 @@
 #define PACMAN_HPP_
 
 #include "api/IGame.hpp"
+#include "api/Vector3.hpp"
 
 namespace arcade {
 
@@ -26,6 +27,7 @@ namespace arcade {
 
         protected:
         private:
+            arcade::math::Vector3 m_direction;
     };
 
 }
