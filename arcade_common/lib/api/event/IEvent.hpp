@@ -12,6 +12,9 @@ namespace arcade {
 
 namespace event {
 
+    /**
+     * @brief Marker interface to denote a type to be used as a event data
+     */
     class IEvent {
     public:
         virtual ~IEvent() = default;

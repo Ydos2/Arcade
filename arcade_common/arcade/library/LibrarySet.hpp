@@ -53,7 +53,6 @@ namespace library {
             void activateFromPath(scene::Scene &scene, std::string path);
             void activate(scene::Scene &scene, std::string name);
             void activate(scene::Scene &scene, const Library &lib);
-            void activate(scene::Scene &scene, lib::ILibrary *lib);
             void activate(scene::Scene &scene, std::size_t index);
             // get len
             std::size_t size() const;

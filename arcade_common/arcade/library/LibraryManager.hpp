@@ -47,7 +47,8 @@ namespace library {
             void activateFromPath(scene::Scene &scene, std::string path);
             void activate(scene::Scene &scene, std::string name);
             void activate(scene::Scene &scene, const Library &lib);
-            void activate(scene::Scene &scene, lib::ILibrary *lib);
+            // force activation graphic library
+            void forceActivate(scene::Scene &scene);
             // Get active game
             Library *getActiveGame() const;
             // Get active graphic

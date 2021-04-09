@@ -13,10 +13,10 @@ int main(int argc, char **argv)
     arcade::core::Core core;
     int ret = 0;
 
-    if (argc != 2)
+    if (argc != 2 && argc != 1)
         return 84;
     try {
-        ret = core.execute(argv[1]);
+        ret = core.execute(argc >= 2 ? argv[1] : "");
     } catch (std::exception &e) {
         std::cerr << "An unknown error occured. Aborting." << std::endl;
         return 81;

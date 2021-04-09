@@ -202,13 +202,6 @@ namespace library {
         this->activate(scene, index);
     }
 
-    void LibrarySet::activate(scene::Scene &scene, lib::ILibrary *lib)
-    {
-        std::size_t index = this->getIndex(lib);
-
-        this->activate(scene, index);
-    }
-
     void LibrarySet::activate(scene::Scene &scene, std::size_t index)
     {
         if (index == std::string::npos)
