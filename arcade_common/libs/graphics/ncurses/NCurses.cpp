@@ -63,9 +63,9 @@ namespace arcade
     static event::Key ncursesKeyToArcadeKey(char ncursesKey)
     {
         std::vector<char> ncursesKeys = {
-            (char)KEY_EXIT, (char)NCURSES_KEY_BACKSPACE,
-            (char)NCURSES_KEY_RIGHT, (char)NCURSES_KEY_LEFT,
-            (char)NCURSES_KEY_UP, (char)NCURSES_KEY_DOWN,
+            (char)KEY_EXIT, (char)KEY_BACKSPACE,
+            (char)KEY_RIGHT, (char)KEY_LEFT,
+            (char)KEY_UP, (char)KEY_DOWN,
             0, // KEY_SHIFT_LEFT,
             0, // KEY_SHIFT_RIGHT,
             0, // KEY_CTRL_LEFT,
@@ -73,7 +73,7 @@ namespace arcade
             0, // KEY_ALT_LEFT,
             0, // KEY_ALT_RIGHT,
             '\t', (char)KEY_NPAGE, (char)KEY_PPAGE, (char)KEY_DC, (char)KEY_IC,
-            (char)NCURSES_KEY_END, ' ', (char)KEY_F(1), (char)KEY_F(2),
+            (char)KEY_END, ' ', (char)KEY_F(1), (char)KEY_F(2),
             (char)KEY_F(3), (char)KEY_F(4), (char)KEY_F(5), (char)KEY_F(6),
             (char)KEY_F(7), (char)KEY_F(8), (char)KEY_F(9), (char)KEY_F(10),
             (char)KEY_F(11), (char)KEY_F(12), 'A','B','C','D','E','F','G','H',
@@ -81,14 +81,75 @@ namespace arcade
             'Z','1','2','3','4','5','6','7','8','9','0'
         };
 
-        std::vector<event::Key> arcadeKeys(67);
-        int i = -1;
-        std::generate(arcadeKeys.begin(), arcadeKeys.end(), [&]() {
-            i++;
-            if (i < 32)
-                return (i);
-            return (i + 33);
-        });
+        std::vector<event::Key> arcadeKeys = {
+            event::Key::KEY_ESCAPE,
+            event::Key::KEY_BACK_SPACE,
+            event::Key::KEY_ARROW_RIGHT,
+            event::Key::KEY_ARROW_LEFT,
+            event::Key::KEY_ARROW_UP,
+            event::Key::KEY_ARROW_DOWN,
+            event::Key::KEY_SHIFT_LEFT,
+            event::Key::KEY_SHIFT_RIGHT,
+            event::Key::KEY_CTRL_LEFT,
+            event::Key::KEY_CTRL_RIGHT,
+            event::Key::KEY_ALT_LEFT,
+            event::Key::KEY_ALT_RIGHT,
+            event::Key::KEY_TAB,
+            event::Key::KEY_PAGE_UP,
+            event::Key::KEY_PAGE_DOWN,
+            event::Key::KEY_DELETE,
+            event::Key::KEY_INSERT,
+            event::Key::KEY_END_FILE,
+            event::Key::KEY_SPACE,
+            event::Key::KEY_F1,
+            event::Key::KEY_F2,
+            event::Key::KEY_F3,
+            event::Key::KEY_F4,
+            event::Key::KEY_F5,
+            event::Key::KEY_F6,
+            event::Key::KEY_F7,
+            event::Key::KEY_F8,
+            event::Key::KEY_F9,
+            event::Key::KEY_F10,
+            event::Key::KEY_F11,
+            event::Key::KEY_F12,
+            event::Key::KEY_A,
+            event::Key::KEY_B,
+            event::Key::KEY_C,
+            event::Key::KEY_D,
+            event::Key::KEY_E,
+            event::Key::KEY_F,
+            event::Key::KEY_G,
+            event::Key::KEY_H,
+            event::Key::KEY_I,
+            event::Key::KEY_J,
+            event::Key::KEY_K,
+            event::Key::KEY_L,
+            event::Key::KEY_M,
+            event::Key::KEY_N,
+            event::Key::KEY_O,
+            event::Key::KEY_P,
+            event::Key::KEY_Q,
+            event::Key::KEY_R,
+            event::Key::KEY_S,
+            event::Key::KEY_T,
+            event::Key::KEY_U,
+            event::Key::KEY_V,
+            event::Key::KEY_W,
+            event::Key::KEY_X,
+            event::Key::KEY_Y,
+            event::Key::KEY_Z,
+            event::Key::KEY_1,
+            event::Key::KEY_2,
+            event::Key::KEY_3,
+            event::Key::KEY_4,
+            event::Key::KEY_5,
+            event::Key::KEY_6,
+            event::Key::KEY_7,
+            event::Key::KEY_8,
+            event::Key::KEY_9,
+            event::Key::KEY_0,
+        };
 
         for (auto i = 0; i != ncursesKeys.size(); i++) {
             if (ncursesKeys[i] == ncursesKey)
