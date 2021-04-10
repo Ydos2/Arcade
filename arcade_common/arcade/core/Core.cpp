@@ -69,17 +69,19 @@ namespace core {
 
         tmp_chrono += dt.count();
 
-        if (tmp_chrono > 0.5f) {
+        if (game)
+            game->update((*scene), dt.count());
+        graph->update((*scene), dt.count());
 
-            if (game)
-                game->update((*scene), dt.count());
-            graph->update((*scene), dt.count());
+        for (auto iter : scene->pullKeyBoardEvents())
+            game->onKeyEvent(iter);
+        for (auto iter : scene->pullMouseEvents())
+            game->onMouseEvent(iter);
 
-            if (graph->quitRequested())
-                m_exit = true;
+        if (graph->quitRequested())
+            m_exit = true;
 
-            tmp_chrono = 0;
-        }
+        tmp_chrono = 0;
 
         this->m_time = now;
     }

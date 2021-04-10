@@ -11,6 +11,9 @@
 #include "api/IGraphic.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include "api/event/KeyboardEvent.hpp"
+#include <array>
 
 namespace arcade {
 
@@ -26,7 +29,17 @@ namespace arcade {
             bool quitRequested() const override;
         protected:
         private:
-            sf::Window m_window;
+            void manageEvents(IScene &scene);
+            void manageDisplay(IScene &scene);
+            void manageKeyboard(IScene &scene, const std::vector<event::Key> &newKeyTab);
+            void manageMouse(IScene &scene, sf::Event::MouseButtonEvent button, bool pressed);
+            std::vector<event::Key> computeKeyTab();
+            bool isPressedKey(event::Key key, const std::vector<event::Key> &tab);
+            event::Key sfmlKeyToArcade(sf::Keyboard::Key key);
+
+            sf::RenderWindow m_window;
+            std::vector<event::Key> m_keytab;
+            std::array<bool, 3> m_mousetab = {false};
     };
 
 }
