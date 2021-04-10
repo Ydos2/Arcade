@@ -27,8 +27,8 @@ namespace arcade
             exit(EXIT_FAILURE);
         }
 
-        if (SDL_CreateWindow("Arcade", SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED, 600, 640, 0) < 0)
+        if (!SDL_CreateWindow("Arcade", SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED, 600, 640, 0))
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());
             SDL_Quit();
@@ -37,6 +37,7 @@ namespace arcade
         m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
         SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
         m_isOpen = true;
+        (void)scene;
     }
 
     static std::vector<std::reference_wrapper<IEntity>> getSortedEntities(
@@ -66,6 +67,104 @@ namespace arcade
         return (entities);
     }
 
+    static event::Key sdlKeyToArcadeKey(char sdlKey)
+    {
+        std::vector<char> sdlKeys = {
+            (char)SDLK_ESCAPE, (char)SDLK_BACKSPACE,
+            (char)SDLK_RIGHT, (char)SDLK_LEFT,
+            (char)SDLK_UP, (char)SDLK_DOWN,
+            0, // KEY_SHIFT_LEFT,
+            0, // KEY_SHIFT_RIGHT,
+            0, // KEY_CTRL_LEFT,
+            0, // KEY_CTRL_RIGHT,
+            0, // KEY_ALT_LEFT,
+            0, // KEY_ALT_RIGHT,
+            '\t', (char)SDLK_PAGEUP, (char)SDLK_PAGEDOWN, (char)SDLK_DELETE, (char)SDLK_INSERT,
+            (char)SDLK_END, ' ', (char)SDLK_F1, (char)SDLK_F2,
+            (char)SDLK_F3, (char)SDLK_F4, (char)SDLK_F5, (char)SDLK_F6,
+            (char)SDLK_F7, (char)SDLK_F8, (char)SDLK_F9, (char)SDLK_F10,
+            (char)SDLK_F11, (char)SDLK_F12, 'a','b','c','d','e','f','g','h',
+            'i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y',
+            'z','1','2','3','4','5','6','7','8','9','0'
+        };
+
+        std::vector<event::Key> arcadeKeys = {
+            event::Key::KEY_ESCAPE,
+            event::Key::KEY_BACK_SPACE,
+            event::Key::KEY_ARROW_RIGHT,
+            event::Key::KEY_ARROW_LEFT,
+            event::Key::KEY_ARROW_UP,
+            event::Key::KEY_ARROW_DOWN,
+            event::Key::KEY_SHIFT_LEFT,
+            event::Key::KEY_SHIFT_RIGHT,
+            event::Key::KEY_CTRL_LEFT,
+            event::Key::KEY_CTRL_RIGHT,
+            event::Key::KEY_ALT_LEFT,
+            event::Key::KEY_ALT_RIGHT,
+            event::Key::KEY_TAB,
+            event::Key::KEY_PAGE_UP,
+            event::Key::KEY_PAGE_DOWN,
+            event::Key::KEY_DELETE,
+            event::Key::KEY_INSERT,
+            event::Key::KEY_END_FILE,
+            event::Key::KEY_SPACE,
+            event::Key::KEY_F1,
+            event::Key::KEY_F2,
+            event::Key::KEY_F3,
+            event::Key::KEY_F4,
+            event::Key::KEY_F5,
+            event::Key::KEY_F6,
+            event::Key::KEY_F7,
+            event::Key::KEY_F8,
+            event::Key::KEY_F9,
+            event::Key::KEY_F10,
+            event::Key::KEY_F11,
+            event::Key::KEY_F12,
+            event::Key::KEY_A,
+            event::Key::KEY_B,
+            event::Key::KEY_C,
+            event::Key::KEY_D,
+            event::Key::KEY_E,
+            event::Key::KEY_F,
+            event::Key::KEY_G,
+            event::Key::KEY_H,
+            event::Key::KEY_I,
+            event::Key::KEY_J,
+            event::Key::KEY_K,
+            event::Key::KEY_L,
+            event::Key::KEY_M,
+            event::Key::KEY_N,
+            event::Key::KEY_O,
+            event::Key::KEY_P,
+            event::Key::KEY_Q,
+            event::Key::KEY_R,
+            event::Key::KEY_S,
+            event::Key::KEY_T,
+            event::Key::KEY_U,
+            event::Key::KEY_V,
+            event::Key::KEY_W,
+            event::Key::KEY_X,
+            event::Key::KEY_Y,
+            event::Key::KEY_Z,
+            event::Key::KEY_1,
+            event::Key::KEY_2,
+            event::Key::KEY_3,
+            event::Key::KEY_4,
+            event::Key::KEY_5,
+            event::Key::KEY_6,
+            event::Key::KEY_7,
+            event::Key::KEY_8,
+            event::Key::KEY_9,
+            event::Key::KEY_0,
+        };
+    
+        for (size_t i = 0; i != sdlKeys.size(); i++) {
+            if (sdlKeys[i] == sdlKey)
+                return (arcadeKeys[i]);
+        }
+        return (event::Key::KEY_ESCAPE);
+    }
+
     void Sdl::update(IScene &scene, float dt)
     {
         std::vector<std::reference_wrapper<IEntity>> sortedEntities;
@@ -78,7 +177,6 @@ namespace arcade
         /* SDL Events */
         while (SDL_PollEvent(&events))
         {
-            // C'est un exemple pour voir si ça marche pas de panique SVP
             switch (events.type)
             {
             case SDL_QUIT:
@@ -87,17 +185,18 @@ namespace arcade
                 keyboardEvent.key = event::Key::KEY_ESCAPE;
                 scene.pushEvent(keyboardEvent);
                 break;
-            case SDL_SCANCODE_AC_BACK:
-                keyboardEvent.action = event::KeyboardEvent::PRESSED;
-                keyboardEvent.key = event::Key::KEY_DELETE;
+            case SDL_KEYDOWN:
+                //std::cout << (unsigned long)sdlKeyToArcadeKey(events.key.keysym.sym) << std::endl;
+                keyboardEvent.action = event::KeyboardEvent::DOWN;
+                keyboardEvent.key = sdlKeyToArcadeKey(events.key.keysym.sym);
                 scene.pushEvent(keyboardEvent);
                 break;
             }
         }
 
         SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-        if(SDL_RenderClear(m_renderer))
-            std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
+        //if(SDL_RenderClear(m_renderer))
+        //    std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
 
         sortedEntities = getSortedEntities(scene);
 
@@ -109,6 +208,7 @@ namespace arcade
         
         for (size_t i = 0; i < sortedEntities.size(); i++)
         {
+        std::cout << "1" << std::endl;
             sortedEntities[i].get().forEach([&](arcade::component::IComponent& comp)
             {
                 if (auto ptr = dynamic_cast<component::AsciiSprite*>(&comp))
@@ -148,16 +248,15 @@ namespace arcade
         std::cout << "SDL end" << std::endl;
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
+        SDL_Quit();
+        (void)scene;
     }
 
     bool Sdl::quitRequested() const
     {
         std::cout << "Quit request" << std::endl;
-        SDL_Quit();
         if (m_isOpen)
             return (false);
         return (true);
-        // if ça tourne = false
-        // else ça tourne pas = true
     }
 }

@@ -9,6 +9,8 @@
 #define SFML_HPP_
 
 #include "api/IGraphic.hpp"
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace arcade {
 
@@ -24,6 +26,7 @@ namespace arcade {
             bool quitRequested() const override;
         protected:
         private:
+            sf::Window m_window;
     };
 
 }
