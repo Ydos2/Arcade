@@ -8,6 +8,7 @@
 #include <iostream>
 #include "PacMan.hpp"
 #include "api/component/Sprite.hpp"
+#include "api/component/Transform.hpp"
 #include "api/event/KeyboardEvent.hpp"
 #include "api/event/MouseEvent.hpp"
 
@@ -15,14 +16,19 @@ namespace arcade {
 
     void PacMan::init(IScene &scene)
     {
-        arcade::IEntity &square = scene.newEntity();
+        arcade::IEntity &square = scene.newEntity("square");
         arcade::component::Sprite imgTest;
+        arcade::component::Transform transformTest;
 
         std::cout << "PacMan init" << std::endl;
         imgTest.height = 1;
         imgTest.width = 1;
         imgTest.pixels.push_back(Color {0, 0, 0, 1});
+        transformTest.position.x = 0;
+        transformTest.position.y = 0;
+        transformTest.position.z = 0;
         square.addComponent(imgTest);
+        square.addComponent(transformTest);
     }
 
     void PacMan::update(IScene &scene, float dt)
