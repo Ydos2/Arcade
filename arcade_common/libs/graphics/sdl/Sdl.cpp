@@ -25,20 +25,25 @@ namespace arcade
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());
-            exit(EXIT_FAILURE);
+            // trow error
         }
 
-        if (!SDL_CreateWindow("Arcade", SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED, 600, 640, 0))
+        math::Vector2 windowSize = scene.getWindowSize();
+        if (windowSize.x == 0 || windowSize.y == 0)
+        {
+            windowSize.x = 600;
+            windowSize.y = 640;
+        }
+
+        if (SDL_CreateWindowAndRenderer(windowSize.x, windowSize.y, SDL_WINDOW_SHOWN, &m_window, &m_renderer) < 0)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());
             SDL_Quit();
-            exit(EXIT_FAILURE);
+            // trow error
         }
-        m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
+        //m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+        //SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
         m_isOpen = true;
-        (void)scene;
     }
 
     static std::vector<std::reference_wrapper<IEntity>> getSortedEntities(
@@ -189,7 +194,7 @@ namespace arcade
         SDL_Renderer *m_renderer)
     {
         std::cout << "Text" << std::endl;
-        TTF_Font* Sans = TTF_OpenFont("OpenSans-Regular.ttf", 24);
+        TTF_Font* Sans = TTF_OpenFont("res/font/OpenSans-Regular.ttf", 24);
         SDL_Color White = {255, 255, 255, 255};
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, textComp->text.c_str(), White);
         SDL_Texture* text = SDL_CreateTextureFromSurface(m_renderer, surfaceMessage);
@@ -286,7 +291,6 @@ namespace arcade
         
         for (size_t i = 0; i < sortedEntities.size(); i++)
         {
-            std::cout << "1" << std::endl;
             sortedEntities[i].get().forEach([&](arcade::component::IComponent& comp)
             {
                 if (auto ptr = dynamic_cast<component::AsciiSprite*>(&comp))
@@ -301,11 +305,16 @@ namespace arcade
                     textComp = ptr;
             });
 
-            std::cout << "2" << std::endl;
-            if (spriteComp && transformComp)
+            if (spriteComp != nullptr && transformComp != nullptr)
                 SpriteRenderer(spriteComp, transformComp, m_renderer);
-            else if (textComp && transformComp)
+            else if (textComp != nullptr && transformComp != nullptr)
                 TextRenderer(textComp, transformComp, m_renderer);
+            
+            asciiSpriteComp = nullptr;
+            spriteComp = nullptr;
+            transformComp = nullptr;
+            soundComp = nullptr;
+            textComp = nullptr;
         }
 
         SDL_RenderPresent(m_renderer);
