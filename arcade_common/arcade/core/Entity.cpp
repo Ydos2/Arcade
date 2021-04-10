@@ -6,6 +6,12 @@
 */
 
 #include "Entity.hpp"
+#include "api/component/Transform.hpp"
+#include "api/component/Sprite.hpp"
+#include "api/component/AsciiSprite.hpp"
+#include "api/component/Sound.hpp"
+#include "api/component/Text.hpp"
+#include <iostream>
 
 namespace arcade {
 
@@ -21,8 +27,16 @@ namespace core {
 
     void Entity::addComponent(const component::IComponent& component)
     {
-        
-        m_components.push_back(std::move(std::make_shared<component::IComponent>(component)));
+        if (auto ptr = dynamic_cast<const component::AsciiSprite*>(&component))
+            m_components.push_back(std::make_shared<component::AsciiSprite>(*ptr));
+        else if (auto ptr = dynamic_cast<const component::Sprite*>(&component))
+            m_components.push_back(std::make_shared<component::Sprite>(*ptr));
+        else if (auto ptr = dynamic_cast<const component::Transform*>(&component))
+            m_components.push_back(std::make_shared<component::Transform>(*ptr));
+        else if (auto ptr = dynamic_cast<const component::Sound*>(&component))
+            m_components.push_back(std::make_shared<component::Sound>(*ptr));
+        else if (auto ptr = dynamic_cast<const component::Text*>(&component))
+            m_components.push_back(std::make_shared<component::Text>(*ptr));
     }
 
     void Entity::removeComponent(const component::IComponent& component)
