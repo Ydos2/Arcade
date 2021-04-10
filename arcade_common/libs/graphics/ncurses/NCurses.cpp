@@ -31,6 +31,10 @@ namespace arcade
         keypad(stdscr, TRUE);
         curs_set(0);
         start_color();
+        mousemask(BUTTON1_PRESSED | BUTTON1_RELEASED | BUTTON1_CLICKED |
+                  BUTTON2_PRESSED | BUTTON2_RELEASED | BUTTON2_CLICKED |
+                  BUTTON3_PRESSED | BUTTON3_RELEASED | BUTTON3_CLICKED,
+                  NULL);
         m_isOpen = true;
     }
 
@@ -159,7 +163,61 @@ namespace arcade
         return (event::Key::KEY_ESCAPE);
     }
 
-    static void pushKeyboardEvent(IScene &scene)
+    static void pushMouseEvent(IScene &scene, char ch)
+    {
+        event::MouseEvent mouseEvent;
+        MEVENT nCursesMouseEvent;
+
+        if (getmouse(&nCursesMouseEvent)) {
+            mouseEvent.x = nCursesMouseEvent.x;
+            mouseEvent.y = nCursesMouseEvent.y;
+            switch (nCursesMouseEvent.bstate) {
+                case BUTTON1_PRESSED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_PRIMARY;
+                    mouseEvent.action = event::MouseEvent::DOWN;
+                    break;
+                case BUTTON1_RELEASED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_PRIMARY;
+                    mouseEvent.action = event::MouseEvent::RELEASED;
+                    break;
+                case BUTTON1_CLICKED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_PRIMARY;
+                    mouseEvent.action = event::MouseEvent::PRESSED;
+                    break;
+                case BUTTON2_PRESSED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_SECONDARY;
+                    mouseEvent.action = event::MouseEvent::DOWN;
+                    break;
+                case BUTTON2_RELEASED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_SECONDARY;
+                    mouseEvent.action = event::MouseEvent::RELEASED;
+                    break;
+                case BUTTON2_CLICKED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_SECONDARY;
+                    mouseEvent.action = event::MouseEvent::PRESSED;
+                    break;
+                case BUTTON3_PRESSED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_AUXILIARY;
+                    mouseEvent.action = event::MouseEvent::DOWN;
+                    break;
+                case BUTTON3_RELEASED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_AUXILIARY;
+                    mouseEvent.action = event::MouseEvent::RELEASED;
+                    break;
+                case BUTTON3_CLICKED :
+                    mouseEvent.button = event::MouseEvent::MOUSE_AUXILIARY;
+                    mouseEvent.action = event::MouseEvent::PRESSED;
+                    break;
+                default:
+                    mouseEvent.button = event::MouseEvent::MOUSE_AUXILIARY;
+                    mouseEvent.action = event::MouseEvent::PRESSED;
+                    break;
+            }
+        }
+        scene.pushEvent(mouseEvent);
+    }
+
+    static void manageEvents(IScene &scene)
     {
         event::KeyboardEvent keyboardEvent;
         std::vector<char> keys;
@@ -169,27 +227,26 @@ namespace arcade
         while ((c = getch()) != ERR)
             keys.push_back(c);
         for (char key : keys) {
-            keyboardEvent.key = ncursesKeyToArcadeKey(key);
-            if (std::count(oldKeys.begin(), oldKeys.end(), key))
-                keyboardEvent.action = event::KeyboardEvent::DOWN;
-            else 
-                keyboardEvent.action = event::KeyboardEvent::PRESSED;
-            scene.pushEvent(keyboardEvent);
+            if (key == KEY_MOUSE)
+                pushMouseEvent(scene, c);
+            else {
+                keyboardEvent.key = ncursesKeyToArcadeKey(key);
+                if (std::count(oldKeys.begin(), oldKeys.end(), key))
+                    keyboardEvent.action = event::KeyboardEvent::DOWN;
+                else 
+                    keyboardEvent.action = event::KeyboardEvent::PRESSED;
+                scene.pushEvent(keyboardEvent);
+            }
         }
         for (char key : oldKeys) {
-            keyboardEvent.key =  ncursesKeyToArcadeKey(key);
-            if (!std::count(keys.begin(), keys.end(), key))
-                keyboardEvent.action = event::KeyboardEvent::RELEASED;
-            scene.pushEvent(keyboardEvent);
+            if (key != KEY_MOUSE) {
+                keyboardEvent.key =  ncursesKeyToArcadeKey(key);
+                if (!std::count(keys.begin(), keys.end(), key))
+                    keyboardEvent.action = event::KeyboardEvent::RELEASED;
+                scene.pushEvent(keyboardEvent);
+            }
         }
         oldKeys = keys;
-    }
-
-    static void pushMouseEvent(IScene &scene)
-    {
-        event::MouseEvent mouseEvent;
-
-        scene.pushEvent(mouseEvent);
     }
 
     static void displayAsciiSprite(component::AsciiSprite *sprite,
@@ -237,8 +294,7 @@ namespace arcade
         component::Sound *sound;
         component::Text *text;
 
-        pushKeyboardEvent(scene);
-        pushMouseEvent(scene);
+        manageEvents(scene);
 
         (void)dt;
         sortedEntities = getSortedEntities(scene);
