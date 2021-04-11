@@ -8,7 +8,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <fstream>
 
 #include "Nibbler.hpp"
 #include "api/component/Sprite.hpp"
@@ -20,18 +19,32 @@ namespace arcade {
 
     void Nibbler::initMap(IScene &scene)
     {
+        std::cout << "Nibbler initMap" << std::endl;
         arcade::component::Sprite wallSprite;
         arcade::component::AsciiSprite wallAsciiSprite;
         arcade::component::Transform wallTransform;
 
-        std::ifstream fileStream("res/maps/map1");
-        std::string line;
-        if (!fileStream)
-            return;
+        m_map = {
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W     W      W  W      W     W",
+            "W WWW W WWWW W  W WWWW W WWW W",
+            "W W     W         W        W W",
+            "W W WW WW WW WWWW W WWW WW W W",
+            "W   W                    W   W",
+            "WWWWW WWWWW WWW WW WWWWW WWWWW",
+            "W     W   W        W   W     W",
+            "W WWWWW W WWW WW WWW W WWWWW W",
+            "W W     W            W     W W",
+            "W W WWW W WW WW W WW W WWW W W",
+            "W W   W      W         W   W W",
+            "W W W WWW W WWWWWW W WWW W W W",
+            "W   W     W        W     W   W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        };
+        m_mapDimensions = {(float)(m_map[0].size()), (float)(m_map.size())};
 
-        for (size_t row = 0; getline(fileStream, line); row++) {
-            m_map.push_back(line);
-            for (size_t col; char c = line[col]; col++) {
+        for (size_t row = 0; row < m_mapDimensions.y; row++) {
+            for (size_t col = 0; char c = m_map[row][col]; col++) {
                 if (c != ' ') {
                     arcade::IEntity &wall = scene.newEntity("wall");
                     wallAsciiSprite.height = 1;
@@ -54,11 +67,12 @@ namespace arcade {
                 }
             }
         }
-        m_mapDimensions = {(float)(m_map[1].size()), (float)(m_map.size())};
+        std::cout << "Nibbler initMap test" << std::endl;
     }
 
     void Nibbler::initSnake(IScene &scene)
     {
+        std::cout << "Nibbler initSnake" << std::endl;
         arcade::component::Sprite sprite;
         arcade::component::AsciiSprite asciiSprite;
         arcade::component::Transform headTransform;
@@ -112,6 +126,7 @@ namespace arcade {
 
     void Nibbler::initFood(IScene &scene)
     {
+        std::cout << "Nibbler initFood" << std::endl;
         m_foodPosition = {1, 1};
         arcade::component::Sprite sprite;
         arcade::component::AsciiSprite asciiSprite;
@@ -151,6 +166,7 @@ namespace arcade {
 
     bool Nibbler::isWall(math::Vector2 coords)
     {
+        std::cout << "Nibbler isWall" << std::endl;
         if (m_map[coords.y][coords.x] != ' ')
             return (true);
         return (false);
@@ -158,6 +174,7 @@ namespace arcade {
 
     bool Nibbler::isSnake(math::Vector2 coords, bool ignoreHead)
     {
+        std::cout << "Nibbler isSnake" << std::endl;
         for (size_t i = ignoreHead ? 1 : 0; i < m_segmentsPos.size(); i++) {
             if (m_segmentsPos[i].x == coords.x && m_segmentsPos[i].y == coords.y)
                 return (true);
@@ -167,6 +184,7 @@ namespace arcade {
 
     bool Nibbler::isFood(math::Vector2 coords)
     {
+        std::cout << "Nibbler isFood" << std::endl;
         if (m_foodPosition.x == coords.x && m_foodPosition.y == coords.y)
             return (true);
         return (false);
@@ -174,6 +192,7 @@ namespace arcade {
 
     void Nibbler::moveFood(IScene &scene)
     {
+        std::cout << "Nibbler moveFood" << std::endl;
         math::Vector2 coords = {0, 0};
         while (!isWall(coords) && !isSnake(coords, false)) {
             coords = {
@@ -196,6 +215,7 @@ namespace arcade {
 
     void Nibbler::moveSnake(IScene &scene)
     {
+        std::cout << "Nibbler moveSnake" << std::endl;
         for (size_t i = m_segmentsPos.size() - 1; i > 0; i--) {
             m_segmentsPos[i] = m_segmentsPos[i - 1];
 
@@ -242,6 +262,7 @@ namespace arcade {
 
     void Nibbler::makeSnakeGrow(IScene &scene)
     {
+        std::cout << "Nibbler makeSnakeGrow" << std::endl;
         math::Vector2 lastSegment = *(m_segmentsPos.end());
         std::vector<math::Vector2> surrondingTiles = {
             {lastSegment.x - 1, lastSegment.y},
@@ -286,7 +307,7 @@ namespace arcade {
 
     void Nibbler::update(IScene &scene, float dt)
     {
-        std::cout << "Nibbler loop" << std::endl;
+        std::cout << "Nibbler update" << std::endl;
         (void)dt;
 
         moveSnake(scene);
@@ -306,6 +327,7 @@ namespace arcade {
 
     void Nibbler::onKeyEvent(const event::KeyboardEvent& key)
     {
+        std::cout << "Nibbler onKeyEvent" << std::endl;
         switch (key.key) {
             case event::Key::KEY_ARROW_UP:
                 if (m_direction != DOWN)
@@ -330,6 +352,7 @@ namespace arcade {
     
     void Nibbler::onMouseEvent(const event::MouseEvent& mouse)
     {
+        std::cout << "Nibbler onMouseEvent" << std::endl;
         (void)mouse;
     }
 
