@@ -221,7 +221,7 @@ namespace arcade
         while ((c = getch()) != ERR)
             keys.push_back(c);
         for (int key : keys) {
-            if (key == KEY_MOUSE) // TODO: comparison is always false due to limited range of data type
+            if (key == KEY_MOUSE)
                 pushMouseEvent(scene);
             else {
                 keyboardEvent.key = ncursesKeyToArcadeKey(key);
@@ -233,7 +233,7 @@ namespace arcade
             }
         }
         for (int key : oldKeys) {
-            if (key != KEY_MOUSE) { // TODO: comparison is always false due to limited range of data type
+            if (key != KEY_MOUSE) {
                 keyboardEvent.key =  ncursesKeyToArcadeKey(key);
                 if (!std::count(keys.begin(), keys.end(), key))
                     keyboardEvent.action = event::KeyboardEvent::RELEASED;
@@ -307,7 +307,6 @@ namespace arcade
                 displayAsciiSprite(asciiSprite, transform);
             else if (text && transform)
                 displayText(text, transform);
-            // TODO: manage sound
             refresh();
         }
     }
