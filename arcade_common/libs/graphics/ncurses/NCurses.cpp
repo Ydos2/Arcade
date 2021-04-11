@@ -30,12 +30,10 @@ namespace arcade
         noecho();
         keypad(stdscr, TRUE);
         curs_set(0);
-        start_color();
         mousemask(BUTTON1_PRESSED | BUTTON1_RELEASED | BUTTON1_CLICKED |
                   BUTTON2_PRESSED | BUTTON2_RELEASED | BUTTON2_CLICKED |
                   BUTTON3_PRESSED | BUTTON3_RELEASED | BUTTON3_CLICKED,
                   NULL);
-        m_isOpen = true;
     }
 
     static std::vector<std::reference_wrapper<IEntity>> getSortedEntities(
