@@ -282,7 +282,7 @@ namespace arcade {
                 return;
             }
         }
-        // TODO: the sake dies
+        scene.exit();
     }
 
     void Nibbler::update(IScene &scene, float dt)
@@ -295,9 +295,8 @@ namespace arcade {
             makeSnakeGrow(scene);
             moveFood(scene);
         }
-        if (isWall(m_segmentsPos[0]) || isSnake(m_segmentsPos[0], true)) {
-            // TODO: the sake dies
-        }
+        if (isWall(m_segmentsPos[0]) || isSnake(m_segmentsPos[0], true))
+            scene.exit();
     }
 
     void Nibbler::end(IScene &scene)
