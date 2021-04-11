@@ -280,42 +280,53 @@ namespace arcade {
     void Nibbler::makeSnakeGrow(IScene &scene)
     {
         std::cout << "Nibbler makeSnakeGrow" << std::endl;
-        math::Vector2 lastSegment = *(m_segmentsPos.end());
+        math::Vector2 lastSegment = m_segmentsPos[m_segmentsPos.size() - 1];
+        std::cout << "test0" << std::endl;
         std::vector<math::Vector2> surrondingTiles = {
             {lastSegment.x - 1, lastSegment.y},
             {lastSegment.x + 1, lastSegment.y},
             {lastSegment.x, lastSegment.y - 1},
             {lastSegment.x, lastSegment.y + 1}
         };
+        std::cout << "test1" << std::endl;
 
         for (math::Vector2 tile : surrondingTiles) {
+        std::cout << "test2" << std::endl;
             if (tile.x >= 0 && tile.y >= 0 && tile.x < m_mapDimensions.x &&
                 tile.y < m_mapDimensions.y && !isWall(tile) && !isSnake(tile, false)) {
+
+            std::cout << "test3" << std::endl;
                 m_segmentsPos.push_back(tile);
 
+            std::cout << "test4" << std::endl;
                 arcade::component::Sprite sprite;
                 arcade::component::AsciiSprite asciiSprite;
                 arcade::component::Transform transform;
                 arcade::IEntity &tail =
                     scene.newEntity("tail" + std::to_string(m_segmentsPos.size() - 2));
 
+            std::cout << "test5" << std::endl;
                 sprite = setSprite(
                     16,
                     16,
                     Color {(char)255, (char)255, (char)0, (char)0}
                 );
 
+            std::cout << "test6" << std::endl;
                 asciiSprite.height = 1;
                 asciiSprite.width = 1;
                 std::vector<char> vector = {'O'};
                 std::shared_ptr<std::vector<char>> vectorPtr(&vector);
                 asciiSprite.sprite = vectorPtr;
+            std::cout << "test7" << std::endl;
 
                 transform.position = {tile.x, tile.y, 1};
+            std::cout << "test8" << std::endl;
 
                 tail.addComponent(asciiSprite);
                 tail.addComponent(sprite);
                 tail.addComponent(transform);
+            std::cout << "test9" << std::endl;
                 return;
             }
         }
