@@ -167,8 +167,11 @@ namespace arcade {
     bool Nibbler::isWall(math::Vector2 coords)
     {
         std::cout << "Nibbler isWall" << std::endl;
-        if (m_map[coords.y][coords.x] == 'W')
+        if (m_map[coords.y][coords.x] == 'W') {
+            std::cout << "Nibbler isWall: in" << std::endl;
             return (true);
+        }
+            std::cout << "Nibbler isWall: out" << std::endl;
         return (false);
     }
 
@@ -194,7 +197,7 @@ namespace arcade {
     {
         std::cout << "Nibbler moveFood" << std::endl;
         math::Vector2 coords = {0, 0};
-        while (!isWall(coords) && !isSnake(coords, false)) {
+        while (isWall(coords) || isSnake(coords, false)) {
             coords = {
                 (float)(random() % (int)(m_mapDimensions.x)),
                 (float)(random() % (int)(m_mapDimensions.y))
