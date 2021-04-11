@@ -32,7 +32,7 @@ namespace arcade {
         for (size_t row = 0; getline(fileStream, line); row++) {
             m_map.push_back(line);
             for (size_t col; char c = line[col]; col++) {
-                if (c != ' ' && c != '\n') {
+                if (c != ' ') {
                     arcade::IEntity &wall = scene.newEntity("wall");
                     wallAsciiSprite.height = 1;
                     wallAsciiSprite.width = 1;
@@ -64,7 +64,7 @@ namespace arcade {
         arcade::component::Transform headTransform;
         arcade::IEntity &head = scene.newEntity("head");
 
-        m_segmentPositions.push_back({14, 7});
+        m_segmentsPos.push_back({14, 7});
         m_direction = LEFT;
 
         sprite.height = 1;
@@ -80,8 +80,8 @@ namespace arcade {
         asciiSprite.sprite = vectorPtr;
 
         headTransform.position = {
-            m_segmentPositions[0].x,
-            m_segmentPositions[0].y,
+            m_segmentsPos[0].x,
+            m_segmentsPos[0].y,
             1
         };
 
@@ -93,14 +93,14 @@ namespace arcade {
             arcade::component::Transform tailTransform;
             arcade::IEntity &tail = scene.newEntity("tail" + std::to_string(i));
             
-            m_segmentPositions.push_back({
-                m_segmentPositions[0].x,
-                m_segmentPositions[0].y - (i + 1)
+            m_segmentsPos.push_back({
+                m_segmentsPos[0].x,
+                m_segmentsPos[0].y - (i + 1)
             });
 
             tailTransform.position = {
-                m_segmentPositions[i + 1].x,
-                m_segmentPositions[i + 1].y,
+                m_segmentsPos[i + 1].x,
+                m_segmentsPos[i + 1].y,
                 1
             };
 
@@ -135,6 +135,8 @@ namespace arcade {
         food.addComponent(asciiSprite);
         food.addComponent(sprite); 
         food.addComponent(transform);
+
+        moveFood(scene);
     }
 
     void Nibbler::init(IScene &scene)
@@ -148,26 +150,63 @@ namespace arcade {
         initFood(scene);
     }
 
+    bool Nibbler::isWall(math::Vector2 coords)
+    {
+        if (m_map[coords.y][coords.x] != ' ')
+            return (true);
+        return (false);
+    }
+
+    bool Nibbler::isSnake(math::Vector2 coords, bool ignoreHead)
+    {
+        for (size_t i = ignoreHead ? 1 : 0; i < m_segmentsPos.size(); i++) {
+            if (m_segmentsPos[i].x == coords.x && m_segmentsPos[i].y == coords.y)
+                return (true);
+        }
+        return (false);
+    }
+
+    bool Nibbler::isFood(math::Vector2 coords)
+    {
+        if (m_foodPosition.x == coords.x && m_foodPosition.y == coords.y)
+            return (true);
+        return (false);
+    }
+
     void Nibbler::moveFood(IScene &scene)
     {
-        // Get random coordinates
-        // Start over if there is a wall
-        // Start over if there is the snake
-        // Update food's position
+        math::Vector2 coords = {0, 0};
+        while (!isWall(coords) && !isSnake(coords, false)) {
+            coords = {
+                random() % (int)(m_mapDimensions.x),
+                random() % (int)(m_mapDimensions.y)
+            };
+        }
+        m_foodPosition = coords;
+        std::reference_wrapper<IEntity> food = scene.getEntity("food")[0];
+            food.get().forEach([&](arcade::component::IComponent& component) {
+                if (auto ptr = dynamic_cast<component::Transform*>(&component)) {
+                    ptr->position = {
+                        m_foodPosition.x,
+                        m_foodPosition.y,
+                        2
+                    };
+                }
+            });
     }
 
     void Nibbler::moveSnake(IScene &scene)
     {
-        for (size_t i = m_snakeLength - 1; i > 0; i--) {
-            m_segmentPositions[i] = m_segmentPositions[i - 1];
+        for (size_t i = m_segmentsPos.size() - 1; i > 0; i--) {
+            m_segmentsPos[i] = m_segmentsPos[i - 1];
 
             std::reference_wrapper<IEntity> segment =
                 scene.getEntity("tail" + std::to_string(i - 1))[0];
             segment.get().forEach([&](arcade::component::IComponent& component) {
                 if (auto ptr = dynamic_cast<component::Transform*>(&component)) {
                     ptr->position = {
-                        m_segmentPositions[i].x,
-                        m_segmentPositions[i].y,
+                        m_segmentsPos[i].x,
+                        m_segmentsPos[i].y,
                         1
                     };
                 }
@@ -176,16 +215,16 @@ namespace arcade {
 
         switch (m_direction) {
         case UP:
-            m_segmentPositions[0].y--;
+            m_segmentsPos[0].y--;
             break;
         case DOWN:
-            m_segmentPositions[0].y++;
+            m_segmentsPos[0].y++;
             break;
         case LEFT:
-            m_segmentPositions[0].x--;
+            m_segmentsPos[0].x--;
             break;
         case RIGHT:
-            m_segmentPositions[0].x++;
+            m_segmentsPos[0].x++;
             break;
         default:
             break;
@@ -194,8 +233,8 @@ namespace arcade {
         head.get().forEach([&](arcade::component::IComponent& component) {
             if (auto ptr = dynamic_cast<component::Transform*>(&component)) {
                 ptr->position = {
-                    m_segmentPositions[0].x,
-                    m_segmentPositions[0].y,
+                    m_segmentsPos[0].x,
+                    m_segmentsPos[0].y,
                     1
                 };
             }
@@ -207,12 +246,15 @@ namespace arcade {
         std::cout << "Nibbler loop" << std::endl;
         (void)dt;
 
-        // Make the snake eat and grow if its head is on food
-            // Move the food if it's being eaten
-            // Make the snake die if it just grew and is too big
-
         moveSnake(scene);
-        // Make the snake die if it hit a wall or itself
+        if (isFood(m_segmentsPos[0])) {
+            // Make the snake grow (add segment at the end)
+            // Make the snake die if there is no free cell
+            moveFood(scene);
+        }
+        if (isWall(m_segmentsPos[0]) || isSnake(m_segmentsPos[0], true)) {
+            // you ded
+        }
     }
 
     void Nibbler::end(IScene &scene)

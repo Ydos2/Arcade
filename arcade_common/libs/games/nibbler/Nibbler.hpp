@@ -38,15 +38,15 @@ namespace arcade {
             void initFood(IScene &scene);
             void moveFood(IScene &scene);
             void moveSnake(IScene &scene);
+            bool isWall(math::Vector2);
+            bool isSnake(math::Vector2, bool excludeHead);
+            bool isFood(math::Vector2);
 
         private:
             std::vector<std::string> m_map;
             math::Vector2 m_mapDimensions;
-
-            std::vector<math::Vector2> m_segmentPositions;
-            size_t m_snakeLength;
+            std::vector<math::Vector2> m_segmentsPos;
             enum {UP, DOWN, LEFT, RIGHT} m_direction;
-            
             math::Vector2 m_foodPosition;
     };
 
