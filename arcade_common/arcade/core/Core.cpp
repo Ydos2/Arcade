@@ -35,8 +35,8 @@ namespace core {
         if (path != "") {
             this->m_libraryManager.add(library::LibraryLoader::load(path));
             this->m_libraryManager.activateFromPath(*scene, path);
-            if (!this->m_libraryManager.getActiveGraphic())
-                return false;
+            //if (!this->m_libraryManager.getActiveGraphic())
+            //    return false;
         }
         this->m_libraryManager.add(library::LibraryLoader::loadAll());
         if (!this->m_libraryManager.getActiveGraphic()) {
