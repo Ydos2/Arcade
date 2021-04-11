@@ -37,6 +37,7 @@ namespace arcade {
             void initSnake(IScene &scene);
             void initFood(IScene &scene);
             void moveFood(IScene &scene);
+            void moveSnake(IScene &scene);
 
         private:
             std::vector<std::string> m_map;

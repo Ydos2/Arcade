@@ -128,14 +128,6 @@ namespace arcade {
         food.addComponent(transform);
     }
 
-    void Nibbler::moveFood(IScene &scene)
-    {
-        // Get random coordinates
-        // Start over if there is a wall
-        // Start over if there is the snake
-        // Update food's position
-    }
-
     void Nibbler::init(IScene &scene)
     {
         math::Vector2 randPosition = {1, 1};
@@ -147,6 +139,38 @@ namespace arcade {
         initFood(scene);
     }
 
+    void Nibbler::moveFood(IScene &scene)
+    {
+        // Get random coordinates
+        // Start over if there is a wall
+        // Start over if there is the snake
+        // Update food's position
+    }
+
+    void Nibbler::moveSnake(IScene &scene)
+    {
+        switch (m_direction)
+        {
+        case UP:
+            m_headPosition.y--;
+            break;
+        case DOWN:
+            m_headPosition.y++;
+            break;
+        case LEFT:
+            m_headPosition.x--;
+            break;
+        case RIGHT:
+            m_headPosition.x++;
+            break;
+        default:
+            break;
+        }
+
+        // Manage tail segments
+        // Update scene entities
+    }
+
     void Nibbler::update(IScene &scene, float dt)
     {
         std::cout << "Nibbler loop" << std::endl;
@@ -155,8 +179,8 @@ namespace arcade {
             // Move the food if it's being eaten
             // Make the snake die if it just grew and is too big
 
-        // Make the snake move forward
-            // Make the snake die if it hit a wall or itself
+        moveSnake(scene);
+        // Make the snake die if it hit a wall or itself
     }
 
     void Nibbler::end(IScene &scene)
