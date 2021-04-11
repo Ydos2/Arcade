@@ -30,12 +30,10 @@ namespace arcade
         noecho();
         keypad(stdscr, TRUE);
         curs_set(0);
-        start_color();
         mousemask(BUTTON1_PRESSED | BUTTON1_RELEASED | BUTTON1_CLICKED |
                   BUTTON2_PRESSED | BUTTON2_RELEASED | BUTTON2_CLICKED |
                   BUTTON3_PRESSED | BUTTON3_RELEASED | BUTTON3_CLICKED,
                   NULL);
-        m_isOpen = true;
     }
 
     static std::vector<std::reference_wrapper<IEntity>> getSortedEntities(
@@ -65,25 +63,21 @@ namespace arcade
         return (entities);
     }
 
-    static event::Key ncursesKeyToArcadeKey(char ncursesKey)
+    static event::Key ncursesKeyToArcadeKey(int ncursesKey)
     {
-        std::vector<char> ncursesKeys = {
-            (char)KEY_EXIT, (char)KEY_BACKSPACE,
-            (char)KEY_RIGHT, (char)KEY_LEFT,
-            (char)KEY_UP, (char)KEY_DOWN,
+        std::vector<int> ncursesKeys = {
+            KEY_EXIT, KEY_BACKSPACE, KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN,
             0, // KEY_SHIFT_LEFT,
             0, // KEY_SHIFT_RIGHT,
             0, // KEY_CTRL_LEFT,
             0, // KEY_CTRL_RIGHT,
             0, // KEY_ALT_LEFT,
             0, // KEY_ALT_RIGHT,
-            '\t', (char)KEY_NPAGE, (char)KEY_PPAGE, (char)KEY_DC, (char)KEY_IC,
-            (char)KEY_END, ' ', (char)KEY_F(1), (char)KEY_F(2),
-            (char)KEY_F(3), (char)KEY_F(4), (char)KEY_F(5), (char)KEY_F(6),
-            (char)KEY_F(7), (char)KEY_F(8), (char)KEY_F(9), (char)KEY_F(10),
-            (char)KEY_F(11), (char)KEY_F(12), 'A','B','C','D','E','F','G','H',
-            'I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y',
-            'Z','1','2','3','4','5','6','7','8','9','0'
+            '\t', KEY_NPAGE, KEY_PPAGE, KEY_DC, KEY_IC, KEY_END, ' ', KEY_F(1),
+            KEY_F(2), KEY_F(3), KEY_F(4), KEY_F(5), KEY_F(6), KEY_F(7), KEY_F(8),
+            KEY_F(9), KEY_F(10), KEY_F(11), KEY_F(12), 'A','B','C','D','E','F',
+            'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W',
+            'X','Y','Z','1','2','3','4','5','6','7','8','9','0'
         };
 
         std::vector<event::Key> arcadeKeys = {
@@ -163,7 +157,7 @@ namespace arcade
         return (event::Key::KEY_ESCAPE);
     }
 
-    static void pushMouseEvent(IScene &scene, char ch)
+    static void pushMouseEvent(IScene &scene)
     {
         event::MouseEvent mouseEvent;
         MEVENT nCursesMouseEvent;
@@ -220,15 +214,15 @@ namespace arcade
     static void manageEvents(IScene &scene)
     {
         event::KeyboardEvent keyboardEvent;
-        std::vector<char> keys;
-        static std::vector<char> oldKeys;
-        char c;
+        std::vector<int> keys;
+        static std::vector<int> oldKeys;
+        int c;
 
         while ((c = getch()) != ERR)
             keys.push_back(c);
-        for (char key : keys) {
+        for (int key : keys) {
             if (key == KEY_MOUSE)
-                pushMouseEvent(scene, c);
+                pushMouseEvent(scene);
             else {
                 keyboardEvent.key = ncursesKeyToArcadeKey(key);
                 if (std::count(oldKeys.begin(), oldKeys.end(), key))
@@ -238,7 +232,7 @@ namespace arcade
                 scene.pushEvent(keyboardEvent);
             }
         }
-        for (char key : oldKeys) {
+        for (int key : oldKeys) {
             if (key != KEY_MOUSE) {
                 keyboardEvent.key =  ncursesKeyToArcadeKey(key);
                 if (!std::count(keys.begin(), keys.end(), key))
@@ -313,7 +307,6 @@ namespace arcade
                 displayAsciiSprite(asciiSprite, transform);
             else if (text && transform)
                 displayText(text, transform);
-            // TODO: manage sound
             refresh();
         }
     }

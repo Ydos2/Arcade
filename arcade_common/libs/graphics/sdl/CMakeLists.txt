@@ -3,7 +3,7 @@ add_library(arcade_sdl2 SHARED
     Sdl.cpp
 )
 find_package(SDL2 REQUIRED)
-#find_package(SDL2_ttf REQUIRED)
+find_library(SDL2TTF_LIBRARIES SDL_ttf)
 SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_ttf_INCLUDE_DIRS})
