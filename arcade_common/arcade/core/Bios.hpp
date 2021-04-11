@@ -9,6 +9,8 @@
 #define BIOS_HPP_
 
 #include "api/IGame.hpp"
+#include "scene/Scene.hpp"
+#include "library/LibraryManager.hpp"
 
 namespace arcade {
 
@@ -16,7 +18,8 @@ namespace core {
 
 class Bios : public lib::IGame {
     public:
-        Bios() = default;
+        Bios(arcade::scene::Scene &scene, arcade::library::LibraryManager &libs) :
+            m_scene(scene), m_libs(libs) {}
         ~Bios() = default;
 
         void init(IScene &scene) override;
@@ -28,6 +31,10 @@ class Bios : public lib::IGame {
 
     protected:
     private:
+        std::size_t m_cursor_index = 0;
+        std::size_t m_cursor_column = 0;
+        arcade::scene::Scene &m_scene;
+        arcade::library::LibraryManager &m_libs;
 };
 
 }
