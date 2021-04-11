@@ -18,19 +18,21 @@
 
 namespace arcade {
 
-    static void initMap(IScene &scene)
+    static std::vector<std::string> initMap(IScene &scene)
     {
         arcade::IEntity &wall = scene.newEntity("wall");
         arcade::component::Sprite wallSprite;
         arcade::component::AsciiSprite wallAsciiSprite;
         arcade::component::Transform wallTransform;
+        std::vector<std::string> map;
 
         std::ifstream fileStream("res/maps/map1");
         std::string line;
         if (!fileStream)
-            return;
+            return (map);
 
         for (size_t row = 0; getline(fileStream, line); row++) {
+            map.push_back(line);
             for (size_t col; char c = line[col]; col++) {
                 if (c != ' ' && c != '\n') {
                     wallAsciiSprite.height = 1;
@@ -53,9 +55,10 @@ namespace arcade {
                 }
             }
         }
+        return (map);
     }
 
-    static void initSnake(IScene &scene)
+    static math::Vector2 initSnake(IScene &scene)
     {
         arcade::component::Sprite sprite;
         arcade::component::AsciiSprite asciiSprite;
@@ -90,21 +93,20 @@ namespace arcade {
             tail.addComponent(sprite);
             tail.addComponent(tailTransform);
         }
+        math::Vector2 position = {14, 7};
+        return (position);
     }
 
     void Nibbler::init(IScene &scene)
     {
+        math::Vector2 randPosition = {1, 1};
         std::cout << "Nibbler init" << std::endl;
+        srand((unsigned)time(NULL));
 
-        initMap(scene);
-        initSnake(scene);
-
-        // Init snake (4 segments)
-            // Position of every segment
-            // Its direction
-            // Its speed ?
-            
-
+        m_map = initMap(scene);
+        m_mapDimensions = {m_map[1].size(), m_map.size()};
+        m_headPosition = initSnake(scene);
+        m_direction = LEFT;
 
         // Init food
             // Its position

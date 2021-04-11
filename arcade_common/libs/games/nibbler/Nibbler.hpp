@@ -33,6 +33,10 @@ namespace arcade {
             void onMouseEvent(const event::MouseEvent& mouse) override;
 
         private:
+            std::vector<std::string> m_map;
+            math::Vector2 m_mapDimensions;
+            math::Vector2 m_headPosition;
+            enum {UP, DOWN, LEFT, RIGHT} m_direction;
     };
 
 }
