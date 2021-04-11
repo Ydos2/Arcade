@@ -8,11 +8,19 @@
 #ifndef NIBBLER_HPP_
 #define NIBBLER_HPP_
 
+#include <vector>
 #include "api/IGame.hpp"
 
 namespace arcade {
 
     class Nibbler : public lib::IGame {
+
+        struct map {
+            size_t height;
+            size_t width;
+            std::vector<char> map;
+        };
+
         public:
             Nibbler() = default;
             ~Nibbler() = default;
@@ -24,7 +32,6 @@ namespace arcade {
             void onKeyEvent(const event::KeyboardEvent& key) override;
             void onMouseEvent(const event::MouseEvent& mouse) override;
 
-        protected:
         private:
     };
 
