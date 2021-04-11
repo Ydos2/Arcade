@@ -10,6 +10,7 @@
 
 #include <vector>
 #include "api/IGame.hpp"
+#include "api/component/Sprite.hpp"
 
 namespace arcade {
 
@@ -33,6 +34,7 @@ namespace arcade {
             void onMouseEvent(const event::MouseEvent& mouse) override;
 
         private:
+            arcade::component::Sprite setSprite(size_t height, size_t width, arcade::Color color);
             void initMap(IScene &scene);
             void initSnake(IScene &scene);
             void initFood(IScene &scene);

@@ -17,6 +17,19 @@
 
 namespace arcade {
 
+    arcade::component::Sprite Nibbler::setSprite(size_t height, size_t width, arcade::Color color)
+    {
+        arcade::component::Sprite sprite;
+        std::vector<arcade::Color> pixel;
+
+        sprite.height = height;
+        sprite.width = width;
+        for (size_t i = 0; i < height * width; i++)
+            pixel.push_back(color);
+        sprite.pixels = pixel;
+        return (sprite);
+    }
+
     void Nibbler::initMap(IScene &scene)
     {
         std::cout << "Nibbler initMap" << std::endl;
@@ -53,11 +66,11 @@ namespace arcade {
                     std::shared_ptr<std::vector<char>> vectorPtr(&vector);
                     wallAsciiSprite.sprite = vectorPtr;
 
-                    wallSprite.height = 1;
-                    wallSprite.width = 1;
-                    wallSprite.pixels = {
+                    wallSprite = setSprite(
+                        16,
+                        16,
                         Color {(char)255, (char)255, (char)255, (char)255}
-                    };
+                    );
 
                     wallTransform.position = {(float)col, (float)row, 0};
 
@@ -81,11 +94,11 @@ namespace arcade {
         m_segmentsPos.push_back({14, 7});
         m_direction = RIGHT;
 
-        sprite.height = 1;
-        sprite.width = 1;
-        sprite.pixels = {
+        sprite = setSprite(
+            16,
+            16,
             Color {(char)255, (char)255, (char)0, (char)0}
-        };
+        );
 
         asciiSprite.height = 1;
         asciiSprite.width = 1;
@@ -133,11 +146,11 @@ namespace arcade {
         arcade::component::Transform transform;
         arcade::IEntity &food = scene.newEntity("food");
 
-        sprite.height = 1;
-        sprite.width = 1;
-        sprite.pixels = {
+        sprite = setSprite(
+            16,
+            16,
             Color {(char)255, (char)255, (char)255, (char)0}
-        };
+        );
 
         asciiSprite.height = 1;
         asciiSprite.width = 1;
@@ -286,11 +299,11 @@ namespace arcade {
                 arcade::IEntity &tail =
                     scene.newEntity("tail" + std::to_string(m_segmentsPos.size()));
 
-                sprite.height = 1;
-                sprite.width = 1;
-                sprite.pixels = {
+                sprite = setSprite(
+                    16,
+                    16,
                     Color {(char)255, (char)255, (char)0, (char)0}
-                };
+                );
 
                 asciiSprite.height = 1;
                 asciiSprite.width = 1;
