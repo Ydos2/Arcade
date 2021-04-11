@@ -17,6 +17,7 @@ namespace arcade
     {
         m_window.create(sf::VideoMode(800, 600), "arcade");
         m_window.setVerticalSyncEnabled(true);
+        m_window.setKeyRepeatEnabled(false);
 
         if (!font.loadFromFile("res/OpenSans-Regular.ttf"))
         {
@@ -57,6 +58,10 @@ namespace arcade
         }
 
         this->m_keytab = newKeyTab;
+        for(int i = 0; i < this->m_keytab.size(); i++) {
+            std::cout << (int)this->m_keytab[i] << " ";
+        }
+        std::cout << std::endl;
     }
 
     static int mouseButtonsToIndex(sf::Mouse::Button button)
@@ -99,7 +104,7 @@ namespace arcade
         }
     }
 
-    static event::Key sfmlKeyToArcade(sf::Keyboard::Key key)
+    event::Key Sfml::sfmlKeyToArcade(sf::Keyboard::Key key)
     {
         std::unordered_map<sf::Keyboard::Key, event::Key> keytab = {
             {sf::Keyboard::Escape, event::Key::KEY_ESCAPE},
@@ -188,7 +193,7 @@ namespace arcade
     void Sfml::manageEvents(IScene &scene)
     {
         sf::Event event;
-        std::vector<event::Key> newKeyTab;
+        std::vector<event::Key> newKeyTab = m_keytab;
         std::array<bool, 3> mousesPressed = {false};
 
         while (m_window.pollEvent(event))
@@ -199,7 +204,21 @@ namespace arcade
                     break;
                 case sf::Event::KeyPressed :
                     try {
-                        newKeyTab.push_back(sfmlKeyToArcade(event.key.code));
+                        auto arckey = sfmlKeyToArcade(event.key.code);
+                        for (std::size_t i = 0; i < newKeyTab.size(); i++)
+                            if (newKeyTab[i] == arckey)
+                                break;
+                        newKeyTab.push_back(arckey);
+                    } catch (std::exception &e) {}
+                    break;
+                case sf::Event::KeyReleased :
+                    try {
+                        auto arckey = sfmlKeyToArcade(event.key.code);
+                        for (std::size_t i = 0; i < newKeyTab.size(); i++)
+                            if (newKeyTab[i] == arckey) {
+                                newKeyTab.erase(newKeyTab.begin() + i);
+                                break;
+                            }
                     } catch (std::exception &e) {}
                     break;
                 case sf::Event::MouseButtonPressed :
