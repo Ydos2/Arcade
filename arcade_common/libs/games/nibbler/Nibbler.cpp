@@ -46,7 +46,7 @@ namespace arcade {
                         Color {(char)255, (char)255, (char)255, (char)255}
                     };
 
-                    wallTransform.position = {col, row, 0};
+                    wallTransform.position = {(float)col, (float)row, 0};
 
                     wall.addComponent(wallAsciiSprite);
                     wall.addComponent(wallSprite);
@@ -54,7 +54,7 @@ namespace arcade {
                 }
             }
         }
-        m_mapDimensions = {m_map[1].size(), m_map.size()};
+        m_mapDimensions = {(float)(m_map[1].size()), (float)(m_map.size())};
     }
 
     void Nibbler::initSnake(IScene &scene)
@@ -177,8 +177,8 @@ namespace arcade {
         math::Vector2 coords = {0, 0};
         while (!isWall(coords) && !isSnake(coords, false)) {
             coords = {
-                random() % (int)(m_mapDimensions.x),
-                random() % (int)(m_mapDimensions.y)
+                (float)(random() % (int)(m_mapDimensions.x)),
+                (float)(random() % (int)(m_mapDimensions.y))
             };
         }
         m_foodPosition = coords;
