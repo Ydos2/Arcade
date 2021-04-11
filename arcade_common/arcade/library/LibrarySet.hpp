@@ -55,6 +55,10 @@ namespace library {
             void activate(scene::Scene &scene, std::string name);
             void activate(scene::Scene &scene, const Library &lib);
             void activate(scene::Scene &scene, std::size_t index);
+            // set next
+            void next(scene::Scene &scene);
+            // set previous
+            void previous(scene::Scene &scene);
             // get len
             std::size_t size() const;
 

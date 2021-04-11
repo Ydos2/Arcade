@@ -32,6 +32,8 @@ namespace scene {
             void add(Scene newScene, std::string name);
             // close scene
             void close(std::string name);
+            // clear scene
+            void clear(std::string name);
 
         private:
             std::unordered_map<std::string, Scene> m_scenes;

@@ -18,9 +18,19 @@ namespace arcade
     namespace scene
     {
 
+        void Scene::clear()
+        {
+            this->m_entity.clear();
+        }
+
         void Scene::exit()
         {
             m_exitState = true;
+        }
+
+        bool Scene::isExit() const
+        {
+            return m_exitState;
         }
 
         void Scene::pushEvent(const event::IEvent &event)

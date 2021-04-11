@@ -191,10 +191,14 @@ namespace arcade
         sf::Event event;
         std::vector<event::Key> newKeyTab = m_keytab;
         std::array<bool, 3> mousesPressed = {false};
+        bool isResized = false;
 
         while (m_window.pollEvent(event))
         {
             switch (event.type) {
+                case sf::Event::Resized :
+                    isResized = true;
+                    break;
                 case sf::Event::Closed :
                     m_window.close();
                     break;
@@ -244,6 +248,15 @@ namespace arcade
                     scene.pushEvent(mouseEvent);
                 }
             }
+
+            if (isResized)
+                return;
+
+            arcade::math::Vector2 ws = scene.getWindowSize();
+            sf::Vector2u newWindowSize(ws.x, ws.y);
+            newWindowSize.x = newWindowSize.x > 700 ? newWindowSize.x : 700;
+            newWindowSize.y = newWindowSize.y > 500 ? newWindowSize.y : 500;
+            m_window.setSize(newWindowSize);
         }
 
         manageKeyboard(scene, newKeyTab);

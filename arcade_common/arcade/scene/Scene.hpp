@@ -27,8 +27,10 @@ namespace arcade
             ~Scene() = default;
 
             void close();
+            void clear();
 
             void exit() override;
+            bool isExit() const;
             void pushEvent(const event::IEvent &event) override;
 
             IEntity &newEntity(std::string name) override;

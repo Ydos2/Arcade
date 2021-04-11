@@ -61,6 +61,12 @@ namespace library {
             std::size_t gameLen() const;
             // Get graphic len
             std::size_t graphicLen() const;
+            // set next
+            void nextGame(scene::Scene &scene);
+            // set previous
+            void previousGame(scene::Scene &scene);
+            void nextGraph(scene::Scene &scene);
+            void previousGraph(scene::Scene &scene);
 
         private:
             LibrarySet m_games;

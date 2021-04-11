@@ -24,11 +24,16 @@ namespace core {
 
             int execute(std::string path = "");
 
+            void exitGame();
+            void launchGame(library::Library *gameLib);
+        
         private:
             void createBios();
             bool start(std::string path);
             void update();
             void end();
+            void manageSpecialKeyboard();
+            void restartGame();
 
         private:
             library::LibraryManager m_libraryManager;
