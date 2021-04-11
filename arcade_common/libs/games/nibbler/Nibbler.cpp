@@ -297,7 +297,7 @@ namespace arcade {
                 arcade::component::AsciiSprite asciiSprite;
                 arcade::component::Transform transform;
                 arcade::IEntity &tail =
-                    scene.newEntity("tail" + std::to_string(m_segmentsPos.size()));
+                    scene.newEntity("tail" + std::to_string(m_segmentsPos.size() - 2));
 
                 sprite = setSprite(
                     16,
@@ -327,6 +327,8 @@ namespace arcade {
         std::cout << "Nibbler update" << std::endl;
         (void)dt;
 
+        std::cout << "Food is at:" << m_foodPosition.x << ',' << m_foodPosition.y << std::endl;
+        std::cout << "Current length is:" << m_segmentsPos.size() << std::endl;
         moveSnake(scene);
         if (isFood(m_segmentsPos[0])) {
             makeSnakeGrow(scene);
