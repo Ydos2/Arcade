@@ -73,7 +73,7 @@ namespace arcade {
                 else if (mapId[i][j] == 2)
                 {
                     // 2 super pacgum
-                    arcade::IEntity &superPacgum = scene.newEntity("superPacgum");
+                    arcade::IEntity &superPacgum = scene.newEntity("superPacgum" + std::to_string(i) + "_" + std::to_string(j));
 
                     transformMap = setTransform(j * 25 + 6.25, i * 25 + 6.25, 0);
                     spriteMap = setSprite(12.5, 12.5, Color {(char)255, (char)255, (char)255, (char)255});
@@ -241,17 +241,14 @@ namespace arcade {
                     std::cout << "pos " << mapId[posy][posx] << std::endl;
                     if (mapId[posy][posx] == 0)
                     {
-                        std::cout << "pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)) << std::endl;
-                        std::vector<std::reference_wrapper<arcade::IEntity>> ent = scene.getEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
-
-                    std::cout << "ici " << ent.size() << std::endl;
-                        scene.removeEntity(ent[0]);
+                        scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.y -= 25;
                         m_score++;
                     }
                     else if (mapId[posy][posx] == 2)
                     {
+                        scene.removeEntity("superPacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.y -= 25;
                         m_timePower = 10;
@@ -288,12 +285,14 @@ namespace arcade {
                     std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y" << posy << " coord x" << posx << std::endl;
                     if (mapId[posy][posx] == 0)
                     {
+                        scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.y += 25;
                         m_score++;
                     }
                     else if (mapId[posy][posx] == 2)
                     {
+                        scene.removeEntity("superPacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.y += 25;
                         m_timePower = 10;
@@ -332,12 +331,14 @@ namespace arcade {
                         ptr.position.x = 21 * 25;
                     if (mapId[posy][posx] == 0)
                     {
+                        scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.x -= 25;
                         m_score++;
                     }
                     else if (mapId[posy][posx] == 2)
                     {
+                        scene.removeEntity("superPacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.x -= 25;
                         m_timePower = 10;
@@ -376,12 +377,14 @@ namespace arcade {
                         ptr.position.x = -25;
                     if (mapId[posy][posx] == 0)
                     {
+                        scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.x += 25;
                         m_score++;
                     }
                     else if (mapId[posy][posx] == 2)
                     {
+                        scene.removeEntity("superPacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.x += 25;
                         m_timePower = 10;

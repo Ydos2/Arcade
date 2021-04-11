@@ -188,6 +188,7 @@ namespace arcade
         SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
         SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
         SDL_FreeSurface(surface);
+        SDL_DestroyTexture(textureSdl);
     }
 
     static void TextRenderer(component::Text *textComp, component::Transform *transformComp,
@@ -288,7 +289,7 @@ namespace arcade
         component::Transform *transformComp = nullptr;
         component::Sound *soundComp = nullptr;
         component::Text *textComp = nullptr;
-        
+
         for (size_t i = 0; i < sortedEntities.size(); i++)
         {
             sortedEntities[i].get().forEach([&](arcade::component::IComponent& comp)
