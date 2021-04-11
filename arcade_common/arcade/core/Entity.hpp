@@ -25,6 +25,7 @@ class Entity : public IEntity {
         ~Entity() = default;
 
         void addComponent(const component::IComponent& component) override;
+
         void removeComponent(const component::IComponent& component) override;
         void forEach(std::function<void(component::IComponent&)> fun) override;
 

@@ -15,6 +15,7 @@
 #include "api/component/Sound.hpp"
 #include "api/component/Text.hpp"
 #include "api/event/KeyboardEvent.hpp"
+#include "api/event/MouseEvent.hpp"
 
 namespace arcade
 {
@@ -24,20 +25,25 @@ namespace arcade
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());
-            exit(EXIT_FAILURE);
+            // trow error
         }
 
-        if (!SDL_CreateWindow("Arcade", SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED, 600, 640, 0))
+        math::Vector2 windowSize = scene.getWindowSize();
+        if (windowSize.x == 0 || windowSize.y == 0)
+        {
+            windowSize.x = 600;
+            windowSize.y = 640;
+        }
+
+        if (SDL_CreateWindowAndRenderer(windowSize.x, windowSize.y, SDL_WINDOW_SHOWN, &m_window, &m_renderer) < 0)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());
             SDL_Quit();
-            exit(EXIT_FAILURE);
+            // trow error
         }
-        m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
+        //m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+        //SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
         m_isOpen = true;
-        (void)scene;
     }
 
     static std::vector<std::reference_wrapper<IEntity>> getSortedEntities(
@@ -165,10 +171,73 @@ namespace arcade
         return (event::Key::KEY_ESCAPE);
     }
 
+    static void SpriteRenderer(component::Sprite *spriteComp, component::Transform *transformComp,
+        SDL_Renderer *m_renderer)
+    {
+        std::cout << "Sprite" << std::endl;
+        SDL_Rect rect;
+        rect.x = int(transformComp->position.x);
+        rect.y = int(transformComp->position.y);
+        rect.w = spriteComp->width;
+        rect.h = spriteComp->height;
+        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
+            spriteComp->width, spriteComp->height, 32, 4 * spriteComp->width,
+            0, 0, 0, 255);
+        SDL_Texture *textureSdl = SDL_CreateTextureFromSurface(m_renderer, surface);
+
+        SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
+        SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
+        SDL_FreeSurface(surface);
+    }
+
+    static void TextRenderer(component::Text *textComp, component::Transform *transformComp,
+        SDL_Renderer *m_renderer)
+    {
+        std::cout << "Text" << std::endl;
+        TTF_Font* Sans = TTF_OpenFont("res/font/OpenSans-Regular.ttf", 24);
+        SDL_Color White = {255, 255, 255, 255};
+        SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, textComp->text.c_str(), White);
+        SDL_Texture* text = SDL_CreateTextureFromSurface(m_renderer, surfaceMessage);
+
+        SDL_Rect rect;
+        rect.x = transformComp->position.x; 
+        rect.y = transformComp->position.y;
+        rect.w = transformComp->scale.x;
+        rect.h = transformComp->scale.y;
+
+        SDL_RenderCopy(m_renderer, text, NULL, &rect);
+        SDL_FreeSurface(surfaceMessage);
+        SDL_DestroyTexture(text);
+        //SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
+    }
+
+    static event::MouseEvent mouseManagement(SDL_MouseButtonEvent button)
+    {
+        event::MouseEvent mouseEvent;
+
+        switch (button.button) {
+            case SDL_BUTTON_LEFT:
+                mouseEvent.button = event::MouseEvent::MOUSE_PRIMARY;
+                return (mouseEvent);
+                break;
+            case SDL_BUTTON_RIGHT:
+                mouseEvent.button = event::MouseEvent::MOUSE_SECONDARY;
+                return (mouseEvent);
+                break;
+            case SDL_BUTTON_MIDDLE:
+                mouseEvent.button = event::MouseEvent::MOUSE_AUXILIARY;
+                return (mouseEvent);
+                break;
+        }
+        mouseEvent.button = event::MouseEvent::MOUSE_PRIMARY;
+        return (mouseEvent);
+    }
+
     void Sdl::update(IScene &scene, float dt)
     {
         std::vector<std::reference_wrapper<IEntity>> sortedEntities;
         event::KeyboardEvent keyboardEvent;
+        event::MouseEvent mouseEvent;
         SDL_Event events;
 
         (void)dt;
@@ -191,6 +260,20 @@ namespace arcade
                 keyboardEvent.key = sdlKeyToArcadeKey(events.key.keysym.sym);
                 scene.pushEvent(keyboardEvent);
                 break;
+            case SDL_KEYUP:
+                keyboardEvent.action = event::KeyboardEvent::RELEASED;
+                keyboardEvent.key = sdlKeyToArcadeKey(events.key.keysym.sym);
+                scene.pushEvent(keyboardEvent);
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                mouseEvent.action = event::MouseEvent::DOWN;
+                mouseEvent.button = mouseManagement(events.button).button;
+                scene.pushEvent(keyboardEvent);
+                break;
+            case SDL_MOUSEBUTTONUP:
+                mouseEvent.action = event::MouseEvent::RELEASED;
+                mouseEvent.button = mouseManagement(events.button).button;
+                break;
             }
         }
 
@@ -200,15 +283,14 @@ namespace arcade
 
         sortedEntities = getSortedEntities(scene);
 
-        component::AsciiSprite *asciiSpriteComp;
-        component::Sprite *spriteComp;
-        component::Transform *transformComp;
-        component::Sound *soundComp;
-        component::Text *textComp;
+        component::AsciiSprite *asciiSpriteComp = nullptr;
+        component::Sprite *spriteComp = nullptr;
+        component::Transform *transformComp = nullptr;
+        component::Sound *soundComp = nullptr;
+        component::Text *textComp = nullptr;
         
         for (size_t i = 0; i < sortedEntities.size(); i++)
         {
-        std::cout << "1" << std::endl;
             sortedEntities[i].get().forEach([&](arcade::component::IComponent& comp)
             {
                 if (auto ptr = dynamic_cast<component::AsciiSprite*>(&comp))
@@ -223,21 +305,16 @@ namespace arcade
                     textComp = ptr;
             });
 
-            if (spriteComp && transformComp) {
-                SDL_Rect rect;
-                rect.x = int(transformComp->position.x);
-                rect.y = int(transformComp->position.y);
-                rect.w = spriteComp->width;
-                rect.h = spriteComp->height;
-                SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
-                    spriteComp->width, spriteComp->height, 32, 4 * spriteComp->width,
-                    0, 0, 0, 255);
-                SDL_Texture *textureSdl = SDL_CreateTextureFromSurface(m_renderer, surface);
-
-                SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
-                SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
-                SDL_FreeSurface(surface);
-            }
+            if (spriteComp != nullptr && transformComp != nullptr)
+                SpriteRenderer(spriteComp, transformComp, m_renderer);
+            else if (textComp != nullptr && transformComp != nullptr)
+                TextRenderer(textComp, transformComp, m_renderer);
+            
+            asciiSpriteComp = nullptr;
+            spriteComp = nullptr;
+            transformComp = nullptr;
+            soundComp = nullptr;
+            textComp = nullptr;
         }
 
         SDL_RenderPresent(m_renderer);

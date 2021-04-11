@@ -7,6 +7,10 @@
 
 #include "Bios.hpp"
 #include <iostream>
+#include "api/component/Sprite.hpp"
+#include "api/component/Transform.hpp"
+#include "api/event/KeyboardEvent.hpp"
+#include "api/event/MouseEvent.hpp"
 
 namespace arcade
 {
@@ -16,7 +20,6 @@ namespace arcade
 
         void Bios::init(IScene &scene)
         {
-            (void)scene;
             std::cout << "BIOS init" << std::endl;
         }
 
@@ -35,12 +38,48 @@ namespace arcade
 
         void Bios::onKeyEvent(const event::KeyboardEvent& key)
         {
+        if (key.action == key.DOWN)
+        {
+            std::cout << (unsigned long)key.key << std::endl;
+            switch (key.key)
+            {
+            case event::Key::KEY_ARROW_UP:
+                std::cout << "!" << std::endl;
+                break;
+            case event::Key::KEY_ARROW_DOWN:
+                std::cout << "!" << std::endl;
+                break;
+            case event::Key::KEY_ARROW_LEFT:
+                break;
+            case event::Key::KEY_ARROW_RIGHT:
+                break;
+            default:
+                std::cout << "?" << std::endl;
+                break;
+            }
+        }
 
         }
 
         void Bios::onMouseEvent(const event::MouseEvent& mouse)
         {
-
+            if (mouse.action == mouse.DOWN)
+            {
+                switch (mouse.button)
+                {
+                case mouse.MOUSE_PRIMARY:
+                    std::cout << "!" << std::endl;
+                    break;
+                case mouse.MOUSE_SECONDARY:
+                    // action
+                    break;
+                case mouse.MOUSE_AUXILIARY:
+                    // action
+                    break;
+                default:
+                    break;
+                }
+            }
         }
 
     }
