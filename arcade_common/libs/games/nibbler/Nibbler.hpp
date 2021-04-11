@@ -42,8 +42,11 @@ namespace arcade {
         private:
             std::vector<std::string> m_map;
             math::Vector2 m_mapDimensions;
-            math::Vector2 m_headPosition;
+
+            std::vector<math::Vector2> m_segmentPositions;
+            size_t m_snakeLength;
             enum {UP, DOWN, LEFT, RIGHT} m_direction;
+            
             math::Vector2 m_foodPosition;
     };
 

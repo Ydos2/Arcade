@@ -64,7 +64,7 @@ namespace arcade {
         arcade::component::Transform headTransform;
         arcade::IEntity &head = scene.newEntity("head");
 
-        m_headPosition = {14, 7};
+        m_segmentPositions.push_back({14, 7});
         m_direction = LEFT;
 
         sprite.height = 1;
@@ -79,7 +79,11 @@ namespace arcade {
         std::shared_ptr<std::vector<char>> vectorPtr(&vector);
         asciiSprite.sprite = vectorPtr;
 
-        headTransform.position = {m_headPosition.x, m_headPosition.y, 1};
+        headTransform.position = {
+            m_segmentPositions[0].x,
+            m_segmentPositions[0].y,
+            1
+        };
 
         head.addComponent(asciiSprite);
         head.addComponent(sprite);
@@ -89,9 +93,14 @@ namespace arcade {
             arcade::component::Transform tailTransform;
             arcade::IEntity &tail = scene.newEntity("tail" + std::to_string(i));
             
+            m_segmentPositions.push_back({
+                m_segmentPositions[0].x,
+                m_segmentPositions[0].y - (i + 1)
+            });
+
             tailTransform.position = {
-                m_headPosition.x,
-                m_headPosition.y - (i + 1),
+                m_segmentPositions[i + 1].x,
+                m_segmentPositions[i + 1].y,
                 1
             };
 
@@ -149,31 +158,54 @@ namespace arcade {
 
     void Nibbler::moveSnake(IScene &scene)
     {
-        switch (m_direction)
-        {
+        for (size_t i = m_snakeLength - 1; i > 0; i--) {
+            m_segmentPositions[i] = m_segmentPositions[i - 1];
+
+            std::reference_wrapper<IEntity> segment =
+                scene.getEntity("tail" + std::to_string(i - 1))[0];
+            segment.get().forEach([&](arcade::component::IComponent& component) {
+                if (auto ptr = dynamic_cast<component::Transform*>(&component)) {
+                    ptr->position = {
+                        m_segmentPositions[i].x,
+                        m_segmentPositions[i].y,
+                        1
+                    };
+                }
+            });
+        }
+
+        switch (m_direction) {
         case UP:
-            m_headPosition.y--;
+            m_segmentPositions[0].y--;
             break;
         case DOWN:
-            m_headPosition.y++;
+            m_segmentPositions[0].y++;
             break;
         case LEFT:
-            m_headPosition.x--;
+            m_segmentPositions[0].x--;
             break;
         case RIGHT:
-            m_headPosition.x++;
+            m_segmentPositions[0].x++;
             break;
         default:
             break;
         }
-
-        // Manage tail segments
-        // Update scene entities
+        std::reference_wrapper<IEntity> head = scene.getEntity("head")[0];
+        head.get().forEach([&](arcade::component::IComponent& component) {
+            if (auto ptr = dynamic_cast<component::Transform*>(&component)) {
+                ptr->position = {
+                    m_segmentPositions[0].x,
+                    m_segmentPositions[0].y,
+                    1
+                };
+            }
+        });
     }
 
     void Nibbler::update(IScene &scene, float dt)
     {
         std::cout << "Nibbler loop" << std::endl;
+        (void)dt;
 
         // Make the snake eat and grow if its head is on food
             // Move the food if it's being eaten
@@ -186,6 +218,7 @@ namespace arcade {
     void Nibbler::end(IScene &scene)
     {
         std::cout << "Nibbler end" << std::endl;
+        (void)scene;
     }
 
     void Nibbler::onKeyEvent(const event::KeyboardEvent& key)
@@ -214,7 +247,7 @@ namespace arcade {
     
     void Nibbler::onMouseEvent(const event::MouseEvent& mouse)
     {
-
+        (void)mouse;
     }
 
 }
