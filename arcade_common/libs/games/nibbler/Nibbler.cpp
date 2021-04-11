@@ -79,7 +79,7 @@ namespace arcade {
         arcade::IEntity &head = scene.newEntity("head");
 
         m_segmentsPos.push_back({14, 7});
-        m_direction = LEFT;
+        m_direction = RIGHT;
 
         sprite.height = 1;
         sprite.width = 1;
@@ -166,9 +166,13 @@ namespace arcade {
 
     bool Nibbler::isWall(math::Vector2 coords)
     {
-        std::cout << "Nibbler isWall" << std::endl;
-        if (m_map[coords.y][coords.x] == 'W')
+        std::cout << "Nibbler isWall: " << coords.x << ',' << coords.y
+                  << " -> " << m_map[coords.y][coords.x] << std::endl;
+        if (m_map[coords.y][coords.x] == 'W') {
+            std::cout << "It's a wall" << std::endl;
             return (true);
+        }
+        std::cout << "It's not a wall" << std::endl;
         return (false);
     }
 
@@ -315,8 +319,10 @@ namespace arcade {
             makeSnakeGrow(scene);
             moveFood(scene);
         }
-        if (isWall(m_segmentsPos[0]) || isSnake(m_segmentsPos[0], true))
+        if (isWall(m_segmentsPos[0]) || isSnake(m_segmentsPos[0], true)) {
+            std::cout << "Nibbler update: game over" << std::endl;
             scene.exit();
+        }
     }
 
     void Nibbler::end(IScene &scene)
