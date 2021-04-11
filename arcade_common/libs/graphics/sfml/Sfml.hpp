@@ -49,6 +49,7 @@ namespace arcade {
             std::array<bool, 3> m_mousetab = {false};
             sf::Font font;
             bool fontError = false;
+            const float unitSize = 25;
     };
 
 }

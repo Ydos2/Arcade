@@ -19,7 +19,7 @@ namespace arcade
         m_window.setVerticalSyncEnabled(true);
         m_window.setKeyRepeatEnabled(false);
 
-        if (!font.loadFromFile("res/OpenSans-Regular.ttf"))
+        if (!font.loadFromFile("res/fonts/OpenSans-Regular.ttf"))
         {
             std::cerr << "sfml : Could not load fonts. Text will not be displayed correctly" << std::endl;
             return;
@@ -58,10 +58,6 @@ namespace arcade
         }
 
         this->m_keytab = newKeyTab;
-        for(int i = 0; i < this->m_keytab.size(); i++) {
-            std::cout << (int)this->m_keytab[i] << " ";
-        }
-        std::cout << std::endl;
     }
 
     static int mouseButtonsToIndex(sf::Mouse::Button button)
@@ -273,7 +269,7 @@ namespace arcade
         texture.update(pixels);
 
         sfSprite.setTexture(texture);
-        sfSprite.setPosition(transform->position.x, transform->position.y);
+        sfSprite.setPosition(transform->position.x * unitSize, transform->position.y * unitSize);
         sfSprite.setScale(transform->scale.x, transform->scale.y);
         sfSprite.setRotation(transform->rotation.z);
         m_window.draw(sfSprite);
@@ -290,11 +286,11 @@ namespace arcade
 
         sfText.setFont(font);
         sfText.setString(text->text);
-        sfText.setCharacterSize(24);
+        sfText.setCharacterSize(18 * transform->scale.x);
         sfText.setFillColor(sf::Color::White);
-        sfText.setPosition(transform->position.x, transform->position.y);
+        sfText.setPosition(transform->position.x * unitSize, transform->position.y * unitSize);
         sfText.setRotation(transform->rotation.z);
-        sfText.setScale(transform->scale.x, transform->scale.y);
+        //sfText.setScale(transform->scale.x, transform->scale.y);
         this->m_window.draw(sfText);
     }
 
