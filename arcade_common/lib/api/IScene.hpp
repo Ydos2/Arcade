@@ -66,8 +66,7 @@ public:
      * @param name The name of the entities to be retrieved
      * @return std::vector<std::reference_wrapper<IEntity>>
      */
-    [[deprecated("forEach should be used over getEntity for performance "
-                 "sake")]] virtual std::vector<std::reference_wrapper<IEntity>>
+    virtual std::vector<std::reference_wrapper<IEntity>>
     getEntity(const std::string& name) = 0;
 
     /**

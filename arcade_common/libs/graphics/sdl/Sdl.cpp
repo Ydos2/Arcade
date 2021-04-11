@@ -278,8 +278,8 @@ namespace arcade
         }
 
         SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-        //if(SDL_RenderClear(m_renderer))
-        //    std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
+        if (SDL_RenderClear(m_renderer))
+            std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
 
         sortedEntities = getSortedEntities(scene);
 
