@@ -141,7 +141,6 @@ namespace arcade {
 
     void Nibbler::init(IScene &scene)
     {
-        math::Vector2 randPosition = {1, 1};
         std::cout << "Nibbler init" << std::endl;
         srand((unsigned)time(NULL));
 
