@@ -241,6 +241,50 @@ namespace arcade {
         });
     }
 
+    void Nibbler::makeSnakeGrow(IScene &scene)
+    {
+        math::Vector2 lastSegment = *(m_segmentsPos.end());
+        std::vector<math::Vector2> surrondingTiles = {
+            {lastSegment.x - 1, lastSegment.y},
+            {lastSegment.x + 1, lastSegment.y},
+            {lastSegment.x, lastSegment.y - 1},
+            {lastSegment.x, lastSegment.y + 1}
+        };
+
+        for (math::Vector2 tile : surrondingTiles) {
+            if (tile.x >= 0 && tile.y >= 0 && tile.x < m_mapDimensions.x &&
+                tile.y < m_mapDimensions.y && !isWall(tile) && !isSnake(tile, false)) {
+                m_segmentsPos.push_back(tile);
+
+                arcade::component::Sprite sprite;
+                arcade::component::AsciiSprite asciiSprite;
+                arcade::component::Transform transform;
+                arcade::IEntity &tail =
+                    scene.newEntity("tail" + std::to_string(m_segmentsPos.size()));
+
+                sprite.height = 1;
+                sprite.width = 1;
+                sprite.pixels = {
+                    Color {(char)255, (char)255, (char)0, (char)0}
+                };
+
+                asciiSprite.height = 1;
+                asciiSprite.width = 1;
+                std::vector<char> vector = {'O'};
+                std::shared_ptr<std::vector<char>> vectorPtr(&vector);
+                asciiSprite.sprite = vectorPtr;
+
+                transform.position = {tile.x, tile.y, 1};
+
+                tail.addComponent(asciiSprite);
+                tail.addComponent(sprite);
+                tail.addComponent(transform);
+                return;
+            }
+        }
+        // TODO: the sake dies
+    }
+
     void Nibbler::update(IScene &scene, float dt)
     {
         std::cout << "Nibbler loop" << std::endl;
@@ -248,12 +292,11 @@ namespace arcade {
 
         moveSnake(scene);
         if (isFood(m_segmentsPos[0])) {
-            // Make the snake grow (add segment at the end)
-            // Make the snake die if there is no free cell
+            makeSnakeGrow(scene);
             moveFood(scene);
         }
         if (isWall(m_segmentsPos[0]) || isSnake(m_segmentsPos[0], true)) {
-            // you ded
+            // TODO: the sake dies
         }
     }
 
