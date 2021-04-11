@@ -6,6 +6,7 @@
 */
 
 #include <string>
+#include <iostream>
 #include <algorithm>
 #include "Scene.hpp"
 #include "api/event/KeyboardEvent.hpp"
@@ -42,7 +43,7 @@ namespace arcade
         }
 
         IEntity &Scene::newEntity(std::string name)
-        { 
+        {
             m_entity.push_back(core::Entity(name));
 
             return m_entity.back();
@@ -50,7 +51,9 @@ namespace arcade
 
         IEntity &Scene::newEntity()
         {
-            return this->newEntity("");
+            m_entity.push_back(core::Entity(""));
+
+            return m_entity.back();
         }
 
         std::vector<std::reference_wrapper<IEntity>> Scene::getEntity(
@@ -58,7 +61,8 @@ namespace arcade
         {
             std::vector<std::reference_wrapper<IEntity>> ret;
 
-            for (core::Entity &ent : m_entity) {
+            for (size_t i = 0; i < m_entity.size(); i++) {
+                core::Entity &ent = m_entity[i];
                 if (ent.getName() == name)
                     ret.push_back(ent);
             }
