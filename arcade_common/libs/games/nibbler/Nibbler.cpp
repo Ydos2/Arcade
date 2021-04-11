@@ -70,7 +70,7 @@ namespace arcade {
         sprite.height = 1;
         sprite.width = 1;
         sprite.pixels = {
-            Color {(char)255, (char)0, (char)0, (char)255}
+            Color {(char)255, (char)255, (char)0, (char)0}
         };
 
         asciiSprite.height = 1;
@@ -101,31 +101,39 @@ namespace arcade {
         }
     }
 
-    math::Vector2 Nibbler::createNewFood(IScene &scene)
+    void Nibbler::initFood(IScene &scene)
     {
-        /* m_foodPosition = {1, 1};
+        m_foodPosition = {1, 1};
         arcade::component::Sprite sprite;
         arcade::component::AsciiSprite asciiSprite;
-        arcade::component::Transform headTransform;
-        arcade::IEntity &head = scene.newEntity("head");
+        arcade::component::Transform transform;
+        arcade::IEntity &food = scene.newEntity("food");
 
         sprite.height = 1;
         sprite.width = 1;
         sprite.pixels = {
-            Color {(char)255, (char)0, (char)0, (char)255}
+            Color {(char)255, (char)255, (char)255, (char)0}
         };
 
         asciiSprite.height = 1;
         asciiSprite.width = 1;
-        std::vector<char> vector = {'O'};
+        std::vector<char> vector = {'*'};
         std::shared_ptr<std::vector<char>> vectorPtr(&vector);
         asciiSprite.sprite = vectorPtr;
 
-        headTransform.position = {14, 7, 1};
+        transform.position = {1, 1, 2};
 
-        head.addComponent(asciiSprite);
-        head.addComponent(sprite); 
-        head.addComponent(headTransform);*/
+        food.addComponent(asciiSprite);
+        food.addComponent(sprite); 
+        food.addComponent(transform);
+    }
+
+    void Nibbler::moveFood(IScene &scene)
+    {
+        // Get random coordinates
+        // Start over if there is a wall
+        // Start over if there is the snake
+        // Update food's position
     }
 
     void Nibbler::init(IScene &scene)
@@ -136,24 +144,16 @@ namespace arcade {
 
         initMap(scene);
         initSnake(scene);
-        createNewFood(scene);
-        // Init food
-            // Its position
-            // Its sprite
+        initFood(scene);
     }
 
     void Nibbler::update(IScene &scene, float dt)
     {
         std::cout << "Nibbler loop" << std::endl;
-        // Make food appear if there is none
 
-        // Make the snake eat and grow if it's on food
-            // Remove the food from entities if it's just been eaten
+        // Make the snake eat and grow if its head is on food
+            // Move the food if it's being eaten
             // Make the snake die if it just grew and is too big
-
-        // Manage events
-            // Change snake's direction if needed
-            // Other events: pause, quit, etc ?
 
         // Make the snake move forward
             // Make the snake die if it hit a wall or itself
@@ -166,7 +166,26 @@ namespace arcade {
 
     void Nibbler::onKeyEvent(const event::KeyboardEvent& key)
     {
-        // Change direction if a valid key has been pressed / released / is down
+        switch (key.key) {
+            case event::Key::KEY_ARROW_UP:
+                if (m_direction != DOWN)
+                    m_direction = UP;
+                break;
+            case event::Key::KEY_ARROW_DOWN:
+                if (m_direction != UP)
+                    m_direction = DOWN;
+                break;
+            case event::Key::KEY_ARROW_LEFT:
+                if (m_direction != RIGHT)
+                    m_direction = LEFT;
+                break;
+            case event::Key::KEY_ARROW_RIGHT:
+                if (m_direction != LEFT)
+                    m_direction = RIGHT;
+                break;
+            default:
+                break;
+        }
     }
     
     void Nibbler::onMouseEvent(const event::MouseEvent& mouse)
