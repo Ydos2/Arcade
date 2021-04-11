@@ -18,23 +18,22 @@
 
 namespace arcade {
 
-    static std::vector<std::string> initMap(IScene &scene)
+    void Nibbler::initMap(IScene &scene)
     {
-        arcade::IEntity &wall = scene.newEntity("wall");
         arcade::component::Sprite wallSprite;
         arcade::component::AsciiSprite wallAsciiSprite;
         arcade::component::Transform wallTransform;
-        std::vector<std::string> map;
 
         std::ifstream fileStream("res/maps/map1");
         std::string line;
         if (!fileStream)
-            return (map);
+            return;
 
         for (size_t row = 0; getline(fileStream, line); row++) {
-            map.push_back(line);
+            m_map.push_back(line);
             for (size_t col; char c = line[col]; col++) {
                 if (c != ' ' && c != '\n') {
+                    arcade::IEntity &wall = scene.newEntity("wall");
                     wallAsciiSprite.height = 1;
                     wallAsciiSprite.width = 1;
                     std::vector<char> vector = {c};
@@ -55,11 +54,56 @@ namespace arcade {
                 }
             }
         }
-        return (map);
+        m_mapDimensions = {m_map[1].size(), m_map.size()};
     }
 
-    static math::Vector2 initSnake(IScene &scene)
+    void Nibbler::initSnake(IScene &scene)
     {
+        arcade::component::Sprite sprite;
+        arcade::component::AsciiSprite asciiSprite;
+        arcade::component::Transform headTransform;
+        arcade::IEntity &head = scene.newEntity("head");
+
+        m_headPosition = {14, 7};
+        m_direction = LEFT;
+
+        sprite.height = 1;
+        sprite.width = 1;
+        sprite.pixels = {
+            Color {(char)255, (char)0, (char)0, (char)255}
+        };
+
+        asciiSprite.height = 1;
+        asciiSprite.width = 1;
+        std::vector<char> vector = {'O'};
+        std::shared_ptr<std::vector<char>> vectorPtr(&vector);
+        asciiSprite.sprite = vectorPtr;
+
+        headTransform.position = {m_headPosition.x, m_headPosition.y, 1};
+
+        head.addComponent(asciiSprite);
+        head.addComponent(sprite);
+        head.addComponent(headTransform);
+
+        for (size_t i = 0; i < 3; i++) {
+            arcade::component::Transform tailTransform;
+            arcade::IEntity &tail = scene.newEntity("tail" + std::to_string(i));
+            
+            tailTransform.position = {
+                m_headPosition.x,
+                m_headPosition.y - (i + 1),
+                1
+            };
+
+            tail.addComponent(asciiSprite);
+            tail.addComponent(sprite);
+            tail.addComponent(tailTransform);
+        }
+    }
+
+    math::Vector2 Nibbler::createNewFood(IScene &scene)
+    {
+        /* m_foodPosition = {1, 1};
         arcade::component::Sprite sprite;
         arcade::component::AsciiSprite asciiSprite;
         arcade::component::Transform headTransform;
@@ -80,21 +124,8 @@ namespace arcade {
         headTransform.position = {14, 7, 1};
 
         head.addComponent(asciiSprite);
-        head.addComponent(sprite);
-        head.addComponent(headTransform);
-
-        for (size_t i = 0; i < 3; i++) {
-            arcade::component::Transform tailTransform;
-            arcade::IEntity &tail = scene.newEntity("tail" + std::to_string(i));
-            
-            tailTransform.position = {14, 7 - (i + 1), 1};
-
-            tail.addComponent(asciiSprite);
-            tail.addComponent(sprite);
-            tail.addComponent(tailTransform);
-        }
-        math::Vector2 position = {14, 7};
-        return (position);
+        head.addComponent(sprite); 
+        head.addComponent(headTransform);*/
     }
 
     void Nibbler::init(IScene &scene)
@@ -103,11 +134,9 @@ namespace arcade {
         std::cout << "Nibbler init" << std::endl;
         srand((unsigned)time(NULL));
 
-        m_map = initMap(scene);
-        m_mapDimensions = {m_map[1].size(), m_map.size()};
-        m_headPosition = initSnake(scene);
-        m_direction = LEFT;
-
+        initMap(scene);
+        initSnake(scene);
+        createNewFood(scene);
         // Init food
             // Its position
             // Its sprite
