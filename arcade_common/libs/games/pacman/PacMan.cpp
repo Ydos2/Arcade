@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <math.h>
 #include "PacMan.hpp"
 #include "api/component/Sprite.hpp"
 #include "api/component/Text.hpp"
@@ -51,7 +52,8 @@ namespace arcade {
                 if (mapId[i][j] == 0)
                 {
                     // 0 pacgum
-                    arcade::IEntity &pacgum = scene.newEntity("pacgum");
+                        std::cout << "pacgum" + std::to_string(i) + "_" + std::to_string(j) << std::endl;
+                    arcade::IEntity &pacgum = scene.newEntity("pacgum" + std::to_string(i) + "_" + std::to_string(j));
 
                     transformMap = setTransform(j * 25 + 10, i * 25 + 10, 0);
                     spriteMap = setSprite(5, 5, Color {(char)255, (char)255, (char)255, (char)255});
@@ -217,7 +219,7 @@ namespace arcade {
         }
         if (m_timeGhostStart > 10 && m_timeGhost > 1)
         {
-            //moveGhost(scene, mapId);
+            moveGhost(scene, mapId);
             m_timeGhost = 0;
         }
 
@@ -232,8 +234,6 @@ namespace arcade {
                 {
                     component::Transform &ptr = dynamic_cast<component::Transform&>(comp);
 
-                    std::cout << "ici " << ptr.position.x << std::endl;
-                    std::cout << "ici " << ptr.position.y << std::endl;
                     float posx = (ptr.position.x) / 25;
                     float posy = (ptr.position.y) / 25 - 1;
 
@@ -241,6 +241,11 @@ namespace arcade {
                     std::cout << "pos " << mapId[posy][posx] << std::endl;
                     if (mapId[posy][posx] == 0)
                     {
+                        std::cout << "pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)) << std::endl;
+                        std::vector<std::reference_wrapper<arcade::IEntity>> ent = scene.getEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
+
+                    std::cout << "ici " << ent.size() << std::endl;
+                        scene.removeEntity(ent[0]);
                         mapId[posy][posx] = 5;
                         ptr.position.y -= 25;
                         m_score++;
@@ -256,7 +261,7 @@ namespace arcade {
                         ptr.position.y -= 25;
                         //lose
                     }
-                    else if (mapId[posy][posx] == 5)
+                    else if (mapId[posy][posx] != 1)
                     {
                         ptr.position.y -= 25;
                     }
@@ -298,7 +303,7 @@ namespace arcade {
                         ptr.position.y += 25;
                         //lose
                     }
-                    else if (mapId[posy][posx] == 5)
+                    else if (mapId[posy][posx] != 1)
                     {
                         ptr.position.y += 25;
                     }
@@ -322,7 +327,9 @@ namespace arcade {
                     float posx = (ptr.position.x) / 25 - 1;
                     float posy = (ptr.position.y) / 25;
 
-                    std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y" << posy << " coord x" << posx << std::endl;
+                    std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y " << posy << " coord x " << posx << std::endl;
+                    if (posx < 0)
+                        ptr.position.x = 21 * 25;
                     if (mapId[posy][posx] == 0)
                     {
                         mapId[posy][posx] = 5;
@@ -340,13 +347,9 @@ namespace arcade {
                         ptr.position.x -= 25;
                         //lose
                     }
-                    else if (mapId[posy][posx] == 5)
+                    else if (mapId[posy][posx] != 1)
                     {
                         ptr.position.x -= 25;
-                    }
-                    else
-                    {
-                        std::cout << "OOF" << std::endl;
                     }
                 }
                 catch(const std::exception& e)
@@ -368,7 +371,9 @@ namespace arcade {
                     float posx = (ptr.position.x) / 25 + 1;
                     float posy = (ptr.position.y) / 25;
 
-                    std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y" << posy << " coord x" << posx << std::endl;
+                    std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y " << posy << " coord x " << posx << std::endl;
+                    if (posx > 20)
+                        ptr.position.x = -25;
                     if (mapId[posy][posx] == 0)
                     {
                         mapId[posy][posx] = 5;
@@ -386,7 +391,7 @@ namespace arcade {
                         ptr.position.x += 25;
                         //lose
                     }
-                    else if (mapId[posy][posx] == 5)
+                    else if (mapId[posy][posx] != 1)
                     {
                         ptr.position.x += 25;
                     }
