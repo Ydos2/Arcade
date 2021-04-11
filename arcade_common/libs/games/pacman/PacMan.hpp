@@ -29,10 +29,12 @@ namespace arcade {
         private:
             arcade::math::Vector3 m_direction;
             std::vector<std::vector<int>> mapId;
+            std::vector<std::vector<int>> m_savedMapId;
             float m_score;
             float m_timePower;
             float m_timeGhostStart;
             float m_timeGhost;
+            float m_winTime;
     };
 
 }

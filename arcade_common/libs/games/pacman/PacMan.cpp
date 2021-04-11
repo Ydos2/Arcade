@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "PacMan.hpp"
 #include "api/component/Sprite.hpp"
+#include "api/component/AsciiSprite.hpp"
 #include "api/component/Text.hpp"
 #include "api/component/Transform.hpp"
 #include "api/event/KeyboardEvent.hpp"
@@ -54,10 +55,11 @@ namespace arcade {
                 {
                     // 0 pacgum
                     arcade::IEntity &pacgum = scene.newEntity("pacgum" + std::to_string(i) + "_" + std::to_string(j));
-
+                    
                     transformMap = setTransform(j + 0.4, i + 0.4, 0);
                     spriteMap = setSprite(3, 3, Color {(char)255, (char)255, (char)255, (char)255});
                     pacgum.addComponent(spriteMap);
+                    pacgum.addComponent(transformMap);
                     pacgum.addComponent(transformMap);
                 }
                 else if (mapId[i][j] == 1)
@@ -120,7 +122,7 @@ namespace arcade {
             {1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},
             {1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1},
             {1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 4, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1},
-            {0, 0, 0, 0, 0, 0, 0, 1, 0, 4, 4, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+            {5, 0, 0, 0, 0, 0, 0, 1, 0, 4, 4, 4, 0, 1, 0, 0, 0, 0, 0, 0, 5},
             {1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1},
             {1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1},
             {1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},
@@ -135,11 +137,13 @@ namespace arcade {
             {1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
+        m_savedMapId = mapId;
 
         m_score = 0;
         m_timePower = 0;
         m_timeGhostStart = 0;
         m_timeGhost = 0;
+        m_winTime = 1;
         createMap(scene, mapId);
         //1
         scene.setWindowSize(336, 400);
@@ -185,6 +189,16 @@ namespace arcade {
         createMap(scene, mapId);
     }
 
+    static int win(IScene &scene, std::vector<std::vector<int>> mapId)
+    {
+        std::vector<std::reference_wrapper<IEntity>> sortedEntities = getSortedEntities(scene);
+
+        for (size_t i = 0; i < sortedEntities.size(); i++)
+            scene.removeEntity(sortedEntities[i]);
+        createMap(scene, mapId);
+        return 1;
+    }
+
     static int moveGhost(IScene &scene, std::vector<std::vector<int>> mapId)
     {
         std::vector<std::reference_wrapper<IEntity>> ghost = scene.getEntity("ghost");
@@ -226,10 +240,7 @@ namespace arcade {
                         }
 
                         if (mapId[posy][posx] == 3)
-                        {
-                            lose(scene, mapId);
                             return 1;
-                        }
                         else if (mapId[posy][posx] != 1)
                             break;
                     }
@@ -249,20 +260,94 @@ namespace arcade {
     void PacMan::update(IScene &scene, float dt)
     {
         std::vector<std::reference_wrapper<IEntity>> pacman;
+        float speedPacman = 8;
+        bool activePower = false;
         
         //std::cout << "PacMan loop" << std::endl;
         std::cout << "Time: " << m_timeGhostStart << std::endl;
         m_timeGhostStart += dt;
-        m_timeGhost += dt;
+        m_timeGhost += dt * m_winTime;
         if (m_timePower > 0)
         {
-            // power activate
+            pacman = scene.getEntity("pacman");
+            std::vector<std::reference_wrapper<IEntity>> ghost = scene.getEntity("ghost");
+            
+            pacman[0].get().forEach([&](arcade::component::IComponent& comp)
+            {
+                try
+                {
+                    component::Sprite &ptr = dynamic_cast<component::Sprite&>(comp);
+
+                    ptr = setSprite(12, 12, Color {(char)255, (char)255, (char)255, (char)255});
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << '\n';
+                }
+            });
+            for (size_t i = 0; i < ghost.size(); i++)
+            {
+                ghost[i].get().forEach([&](arcade::component::IComponent& comp)
+                {
+                    try
+                    {
+                        component::Sprite &ptr = dynamic_cast<component::Sprite&>(comp);
+
+                        ptr = setSprite(12, 12, Color {(char)75, (char)75, (char)75, (char)255});
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << e.what() << '\n';
+                    }
+                });
+            }
             m_timePower -= dt;
+            activePower = true;
+        }
+        else if (activePower == true)
+        {
+            m_timePower -= dt;
+            activePower = false;
+            pacman = scene.getEntity("pacman");
+            std::vector<std::reference_wrapper<IEntity>> ghost = scene.getEntity("ghost");
+            
+            pacman[0].get().forEach([&](arcade::component::IComponent& comp)
+            {
+                try
+                {
+                    component::Sprite &ptr = dynamic_cast<component::Sprite&>(comp);
+
+                    ptr = setSprite(12, 12, Color {(char)0, (char)255, (char)255, (char)255});
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << '\n';
+                }
+            });
+            for (size_t i = 0; i < ghost.size(); i++)
+            {
+                ghost[i].get().forEach([&](arcade::component::IComponent& comp)
+                {
+                    try
+                    {
+                        component::Sprite &ptr = dynamic_cast<component::Sprite&>(comp);
+
+                        ptr = setSprite(12, 12, Color {(char)0, (char)0, (char)255, (char)255});
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << e.what() << '\n';
+                    }
+                });
+            }
         }
         if (m_timeGhostStart > 10 && m_timeGhost > 1) 
         {
             if (moveGhost(scene, mapId) == 1)
             {
+                mapId = m_savedMapId;
+                lose(scene, mapId);
+                m_winTime = 1;
                 m_score = 0;
                 m_timePower = 0;
                 m_timeGhostStart = 0;
@@ -282,7 +367,7 @@ namespace arcade {
                     component::Transform &ptr = dynamic_cast<component::Transform&>(comp);
 
                     float posx = (ptr.position.x);
-                    float posy = (ptr.position.y) - 1;
+                    float posy = (ptr.position.y - 1);
 
                     std::cout << "coord y" << posy << " coord x" << posx << std::endl;
                     std::cout << "pos " << mapId[posy][posx] << std::endl;
@@ -292,17 +377,24 @@ namespace arcade {
                         mapId[posy][posx] = 5;
                         ptr.position.y -= 1;
                         m_score++;
+                        if (m_score >= 239)
+                        {
+                            mapId = m_savedMapId;
+                            win(scene, mapId);
+                        }
                     }
                     else if (mapId[posy][posx] == 2)
                     {
                         scene.removeEntity("superPacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
-                        ptr.position.y -= 1;
                         m_timePower = 10;
+                        ptr.position.y -= 1;
                     }
                     else if (mapId[posy][posx] == 4)
                     {
+                        mapId = m_savedMapId;
                         lose(scene, mapId);
+                        m_winTime = 1;
                         m_score = 0;
                         m_timePower = 0;
                         m_timeGhostStart = 0;
@@ -328,26 +420,33 @@ namespace arcade {
                 {
                     component::Transform &ptr = dynamic_cast<component::Transform&>(comp);
                     float posx = (ptr.position.x);
-                    float posy = (ptr.position.y) + 1;
+                    float posy = (ptr.position.y + 1);
                 
                     std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y" << posy << " coord x" << posx << std::endl;
                     if (mapId[posy][posx] == 0)
                     {
                         scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
-                        ptr.position.y += 1;
                         m_score++;
+                        ptr.position.y += 1;
+                        if (m_score >= 239)
+                        {
+                            mapId = m_savedMapId;
+                            win(scene, mapId);
+                        }
                     }
                     else if (mapId[posy][posx] == 2)
                     {
                         scene.removeEntity("superPacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
-                        ptr.position.y += 1;
                         m_timePower = 10;
+                        ptr.position.y += 1;
                     }
                     else if (mapId[posy][posx] == 4)
                     {
+                        mapId = m_savedMapId;
                         lose(scene, mapId);
+                        m_winTime = 1;
                         m_score = 0;
                         m_timePower = 0;
                         m_timeGhostStart = 0;
@@ -372,18 +471,26 @@ namespace arcade {
                 try
                 {
                     component::Transform &ptr = dynamic_cast<component::Transform&>(comp);
-                    float posx = (ptr.position.x) - 1;
+                    float posx = (ptr.position.x - 1);
                     float posy = (ptr.position.y);
 
                     std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y " << posy << " coord x " << posx << std::endl;
                     if (posx < 0)
-                        ptr.position.x = 21;
+                    {
+                        ptr.position.x = 20;
+                        return;
+                    }
                     if (mapId[posy][posx] == 0)
                     {
                         scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.x -= 1;
                         m_score++;
+                        if (m_score >= 239)
+                        {
+                            mapId = m_savedMapId;
+                            m_winTime += win(scene, mapId);
+                        }
                     }
                     else if (mapId[posy][posx] == 2)
                     {
@@ -394,7 +501,9 @@ namespace arcade {
                     }
                     else if (mapId[posy][posx] == 4)
                     {
+                        mapId = m_savedMapId;
                         lose(scene, mapId);
+                        m_winTime = 1;
                         m_score = 0;
                         m_timePower = 0;
                         m_timeGhostStart = 0;
@@ -419,18 +528,26 @@ namespace arcade {
                 try
                 {
                     component::Transform &ptr = dynamic_cast<component::Transform&>(comp);
-                    float posx = (ptr.position.x) + 1;
+                    float posx = (ptr.position.x + 1);
                     float posy = (ptr.position.y);
 
                     std::cout << "pos " << mapId[posy][posx] << std::endl << "coord y " << posy << " coord x " << posx << std::endl;
                     if (posx > 20)
-                        ptr.position.x = -1;
+                    {
+                        ptr.position.x = 0;
+                        return;
+                    }
                     if (mapId[posy][posx] == 0)
                     {
                         scene.removeEntity("pacgum" + std::to_string((int)(posy - 0.1)) + "_" + std::to_string((int)(posx - 0.1)));
                         mapId[posy][posx] = 5;
                         ptr.position.x += 1;
                         m_score++;
+                        if (m_score >= 239)
+                        {
+                            mapId = m_savedMapId;
+                            m_winTime += win(scene, mapId);
+                        }
                     }
                     else if (mapId[posy][posx] == 2)
                     {
@@ -441,14 +558,16 @@ namespace arcade {
                     }
                     else if (mapId[posy][posx] == 4)
                     {
+                        mapId = m_savedMapId;
                         lose(scene, mapId);
+                        m_winTime = 1;
                         m_score = 0;
                         m_timePower = 0;
                         m_timeGhostStart = 0;
                         m_timeGhost = 0;
                     }
                     else if (mapId[posy][posx] != 1)
-                        ptr.position.x +=1;
+                        ptr.position.x += 1;
                 }
                 catch(const std::exception& e)
                 {
