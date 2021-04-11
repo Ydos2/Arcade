@@ -47,7 +47,7 @@ namespace scene {
     void SceneManager::close(std::string name)
     {
         try {
-            m_scenes.at(name).close();
+            //m_scenes.at(name).close();
             m_scenes.erase(name);
         } catch (std::exception &e) {
             std::cerr << "The scene \"" << name << "\" does not exist." << std::endl;

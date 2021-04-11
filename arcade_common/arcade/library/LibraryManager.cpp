@@ -134,20 +134,20 @@ namespace library {
             this->m_graphics.activate(scene, lib);
         }
 
-        void LibraryManager::activate(scene::Scene &scene, lib::ILibrary *lib)
+        //
+        void LibraryManager::forceActivate(scene::Scene &scene)
         {
-            this->m_games.activate(scene, lib);
-            this->m_graphics.activate(scene, lib);
+            this->m_graphics.activate(scene, 0);
         }
 
         // Get active game
-        Library *LibraryManager::getActiveGame() const
+        Library *LibraryManager::getActiveGame()
         {
             return this->m_games.getActive();
         }
 
         // Get active graphic
-        Library *LibraryManager::getActiveGraphic() const
+        Library *LibraryManager::getActiveGraphic()
         {
             Library *graph = this->m_graphics.getActive();
 

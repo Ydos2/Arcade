@@ -9,6 +9,15 @@
 #define SFML_HPP_
 
 #include "api/IGraphic.hpp"
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include "api/event/KeyboardEvent.hpp"
+#include <array>
+#include "api/component/Sprite.hpp"
+#include "api/component/Text.hpp"
+#include "api/component/Transform.hpp"
+#include "api/component/Sound.hpp"
 
 namespace arcade {
 
@@ -24,6 +33,22 @@ namespace arcade {
             bool quitRequested() const override;
         protected:
         private:
+            void manageEvents(IScene &scene);
+            void manageDisplay(IScene &scene);
+            void manageKeyboard(IScene &scene, const std::vector<event::Key> &newKeyTab);
+            void manageMouse(IScene &scene, sf::Event::MouseButtonEvent button, bool pressed);
+            void manageSprite(component::Transform *transform, component::Sprite *sprite);
+            void manageText(component::Transform *transform, component::Text *text);
+            void manageSound(component::Sound *sound);
+            std::vector<event::Key> computeKeyTab();
+            bool isPressedKey(event::Key key, const std::vector<event::Key> &tab);
+            event::Key sfmlKeyToArcade(sf::Keyboard::Key key);
+
+            sf::RenderWindow m_window;
+            std::vector<event::Key> m_keytab;
+            std::array<bool, 3> m_mousetab = {false};
+            sf::Font font;
+            bool fontError = false;
     };
 
 }

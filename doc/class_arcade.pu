@@ -3,180 +3,134 @@
 set namespaceSeparator ::
 
 namespace arcade {
-    namespace api {
+    class Core
+
+    namespace lib {
 
         interface ILibrary {
+            + init(scene)
+            + update(scene, at)
+            + end(scene)
+        }
+
+        interface IGraphic {
+        }
+
+        interface IGame {
+            + void onKeyDown(event)
+            + void onKeyPressed(event)
+            + void onKeyReleased(event)
+            + void onMouseDown(event)
+            + void onMousePressed(event)
+            + void onMouseReleased(event)
+        }
+
+    }
+
+    interface IScene {
+        + pushEvent(event)
+        + exit()
+        + newEntity(name)
+        + addEntity(entity)
+        + getEntity(name)
+        + getEntity(index)
+        + removeEntity(name)
+        + addScore(float score)
+        + forEach(function)
+    }
+
+    namespace event {
+
+        interface IEvent {
 
         }
 
+        class KeyBoardEvent {
+            + Key key
+        }
+
+        class MouseEvent {
+            + x
+            + y
+            + button
+        }
+
+        KeyBoardEvent -up-|> IEvent
+        MouseEvent -up-|> IEvent
+
+    }
+
+    namespace component {
         interface IComponent {
-
+            getType()
         }
 
-        interface IEntity {
-
+        class Sprite {
+            + pixels
+            + width
+            + heigth
         }
 
-        interface ISystem {
-
-        }
-
-        interface IResources {
-
-        }
-
-        interface IScene {
-
-        }
-
-        interface IApi {
-
-        }
-
-
-    }
-
-    class api {
-
-    }
-
-    namespace prefab {
-        namespace entity {
-            
-        }
-        namespace system {
-            
-        }
-        namespace component {
-            
-        }
-    }
-
-    namespace core {
-
-        class Component {
-            
-        }
-
-        class Entity {
-
-        }
-
-        class System {
-
-        }
-
-        class Scene {
-
-        }
-
-        class Library {
-
-        }
-
-        class LibraryGame {
-
-        }
-
-        class LibraryGraphic {
-
-        }
-
-        LibraryGame -up-|> Library
-        LibraryGraphic -up-|> Library
-    }
-
-    namespace resource {
-
-        class Resource {
-            - name : std::string
-        }
-         
-        class Image {
-
-        }
-         
         class Sound {
-            
+            + path
         }
 
-        class Font {
-            
-        }
-         
-        class File {
-            
-        }
-         
-        class Entity {
-            
+        class AsciiSprite {
+            + pixels
+            + width
+            + heigth
         }
 
-        class Component {
-            
-        }
-         
-        class System {
-            
+        class Text {
+            + text
         }
 
-        Entity -up-|> Resource
-        Component -up-|> Resource
-        System -up-|> Resource
-        Image -up-|> Resource
-        Font -up-|> Resource
-        Sound -up-|> Resource
-        File -up-|> Resource
+        Sprite --|> IComponent
+        Sound --|> IComponent
+        AsciiSprite --|> IComponent
+        Text --|> IComponent
+
     }
 
-    class ResourceManager {
-        - images : std::unordered_map<std::string, Image>
-        - sounds : std::unordered_map<std::string, Sound>
-        - fonts : std::unordered_map<std::string, Font>
-        - files : std::unordered_map<std::string, File>
-        - objects : std::unordered_map<std::string, Entity>
-        - components : std::unordered_map<std::string, Component>
-        - systems : std::unordered_map<std::string, System>
-
-        + getRessource(name : std::string[, type : RessourceType]) const : const Ressource
-        + load(path : std::string, name : std::string[, type : RessourceType]) : bool
-        + close(name : std::string[, type : RessourceType]) : void
+    class Vector3 {
+        + x
+        + y
+        + z
     }
 
-    class SceneManager {
-        - scenes : std::unorderedMap<std::string, Scene>
+    interface IEntity {
+        + getPosition()
+        + setPosition(pos)
+        + addComponent(component)
+        + removeComponent(index)
+        + removeComponent(type)
+        + getComponent(index)
+        + getComponent(type)
+        + forEach(function)
     }
 
-    class LibraryManager {
-        - games : std::unorderedMap<std::string, LibraryGame>
-        - graphics : std::unorderedMap<std::string, LibraryGraphic>
-    }
+    Vector3 --* IEntity
 
-    class Arcade {
-        - sceneManager : SceneManager
-        - resourceManager : ResourceManager
-        - libraryManager : LibraryManager
+    arcade::component::IComponent --* arcade::IEntity
+    arcade::IEntity --* arcade::IScene
 
-        - exit() : int
+    arcade::event::IEvent <-- arcade::lib::IGraphic
+    arcade::event::IEvent --> arcade::lib::IGame
 
-        + launch(path : std::string) : int
-    }
-
-    ResourceManager --* Arcade
-    SceneManager --* Arcade
-    LibraryManager --* Arcade
-
-    arcade::resource::Resource -up-* arcade::ResourceManager
-    arcade::core::Library -up-* arcade::LibraryManager
-    arcade::core::Scene -up-* arcade::SceneManager
-
-    arcade::core::System -up-|> arcade::api::ISystem
-    arcade::core::Entity -up-|> arcade::api::IEntity
-    arcade::core::Scene -up-|> arcade::api::IScene
-    arcade::core::Component -up-|> arcade::api::IComponent
-    arcade::core::Library -up-|> arcade::api::ILibrary
-    arcade::api -up-|> arcade::api::IApi
+    arcade::lib::ILibrary -up-* arcade::Core
+    arcade::lib::IGraphic -up-|> arcade::lib::ILibrary
+    arcade::lib::IGame -up-|> arcade::lib::ILibrary
+    arcade::IScene -up-* arcade::Core
 
 }
+
+class Color {
+    + a
+    + r
+    + g
+    + b
+}
+
+Color --* arcade::component::Sprite
 
 @enduml

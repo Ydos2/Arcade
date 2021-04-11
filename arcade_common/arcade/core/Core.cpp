@@ -16,7 +16,10 @@ namespace core {
 
     int Core::execute(std::string path)
     { 
-        this->start(path);
+        if (!this->start(path)) {
+            std::cerr << "An error occured at start. Abort." << std::endl;
+            return 84;
+        }
         while (!m_exit)
             this->update();
         this->end();
@@ -24,19 +27,29 @@ namespace core {
         return 0;
     }
 
-    void Core::start(std::string path)
+    bool Core::start(std::string path)
     {
         this->m_sceneManager.add(scene::Scene(), "BIOS");
         scene::Scene *scene = this->m_sceneManager.setActive("BIOS");
 
-        this->m_libraryManager.add(library::LibraryLoader::load(path));
-        this->m_libraryManager.activateFromPath(*scene, path);
+        if (path != "") {
+            this->m_libraryManager.add(library::LibraryLoader::load(path));
+            this->m_libraryManager.activateFromPath(*scene, path);
+        }
         this->m_libraryManager.add(library::LibraryLoader::loadAll());
+        if (!this->m_libraryManager.getActiveGraphic()) {
+            this->m_libraryManager.forceActivate(*scene);
+        }
         m_bios = new Bios();
 
         m_bios->init(*scene);
 
         m_time = std::chrono::system_clock::now();
+
+        if (!this->m_libraryManager.getActiveGraphic()
+            || !this->m_sceneManager.getCurrent())
+            return false;
+        return true;
     }
 
     double tmp_chrono = 0;
@@ -56,17 +69,19 @@ namespace core {
 
         tmp_chrono += dt.count();
 
-        if (tmp_chrono > 0.5f) {
+        if (game)
+            game->update((*scene), dt.count());
+        graph->update((*scene), dt.count());
 
-            if (game)
-                game->update((*scene), dt.count());
-            graph->update((*scene), dt.count());
+        for (auto iter : scene->pullKeyBoardEvents())
+            game->onKeyEvent(iter);
+        for (auto iter : scene->pullMouseEvents())
+            game->onMouseEvent(iter);
 
-            if (graph->quitRequested())
-                m_exit = true;
+        if (graph->quitRequested())
+            m_exit = true;
 
-            tmp_chrono = 0;
-        }
+        tmp_chrono = 0;
 
         this->m_time = now;
     }
