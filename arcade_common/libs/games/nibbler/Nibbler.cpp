@@ -167,7 +167,7 @@ namespace arcade {
     bool Nibbler::isWall(math::Vector2 coords)
     {
         std::cout << "Nibbler isWall" << std::endl;
-        if (m_map[coords.y][coords.x] != ' ')
+        if (m_map[coords.y][coords.x] == 'W')
             return (true);
         return (false);
     }
