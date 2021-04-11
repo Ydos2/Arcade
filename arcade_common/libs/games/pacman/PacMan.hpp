@@ -31,6 +31,8 @@ namespace arcade {
             std::vector<std::vector<int>> mapId;
             float m_score;
             float m_timePower;
+            float m_timeGhostStart;
+            float m_timeGhost;
     };
 
 }
