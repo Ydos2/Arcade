@@ -230,7 +230,7 @@ namespace arcade {
             });
     }
 
-    void Nibbler::moveSnake(IScene &scene)
+    void Nibbler::moveSnake(IScene &scene, float dt)
     {
         std::cout << "Nibbler moveSnake" << std::endl;
         for (size_t i = m_segmentsPos.size() - 1; i > 0; i--) {
@@ -336,11 +336,17 @@ namespace arcade {
     void Nibbler::update(IScene &scene, float dt)
     {
         std::cout << "Nibbler update" << std::endl;
-        (void)dt;
+        
+        static float time = 0;
+        
+        time += dt;
+        if (time < 0.5)
+            return;
+        time = 0;
 
         std::cout << "Food is at:" << m_foodPosition.x << ',' << m_foodPosition.y << std::endl;
         std::cout << "Current length is:" << m_segmentsPos.size() << std::endl;
-        moveSnake(scene);
+        moveSnake(scene, dt);
         if (isFood(m_segmentsPos[0])) {
             makeSnakeGrow(scene);
             moveFood(scene);

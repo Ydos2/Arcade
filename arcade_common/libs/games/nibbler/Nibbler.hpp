@@ -39,7 +39,7 @@ namespace arcade {
             void initSnake(IScene &scene);
             void initFood(IScene &scene);
             void moveFood(IScene &scene);
-            void moveSnake(IScene &scene);
+            void moveSnake(IScene &scene, float dt);
             void makeSnakeGrow(IScene &scene);
             bool isWall(math::Vector2);
             bool isSnake(math::Vector2, bool excludeHead);
