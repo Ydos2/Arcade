@@ -27,7 +27,6 @@ namespace arcade
         {
             (void)scene;
             (void)dt;
-            std::cout << "BIOS update" << std::endl;
         }
 
         void Bios::end(IScene &scene)
@@ -38,7 +37,7 @@ namespace arcade
 
         void Bios::onKeyEvent(const event::KeyboardEvent& key)
         {
-        if (key.action == key.DOWN)
+        if (key.action == key.PRESSED)
         {
             std::cout << (unsigned long)key.key << std::endl;
             switch (key.key)
