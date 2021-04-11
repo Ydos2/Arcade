@@ -28,6 +28,9 @@ namespace arcade {
         protected:
         private:
             arcade::math::Vector3 m_direction;
+            std::vector<std::vector<int>> mapId;
+            float m_score;
+            float m_timePower;
     };
 
 }
