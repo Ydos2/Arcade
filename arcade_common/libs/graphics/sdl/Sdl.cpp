@@ -176,8 +176,8 @@ namespace arcade
     {
         //std::cout << "Sprite" << std::endl;
         SDL_Rect rect;
-        rect.x = int(transformComp->position.x);
-        rect.y = int(transformComp->position.y);
+        rect.x = int(transformComp->position.x * 16);
+        rect.y = int(transformComp->position.y * 16);
         rect.w = spriteComp->width;
         rect.h = spriteComp->height;
         SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
