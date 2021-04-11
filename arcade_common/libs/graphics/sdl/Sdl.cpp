@@ -174,7 +174,7 @@ namespace arcade
     static void SpriteRenderer(component::Sprite *spriteComp, component::Transform *transformComp,
         SDL_Renderer *m_renderer)
     {
-        std::cout << "Sprite" << std::endl;
+        //std::cout << "Sprite" << std::endl;
         SDL_Rect rect;
         rect.x = int(transformComp->position.x);
         rect.y = int(transformComp->position.y);
@@ -193,7 +193,7 @@ namespace arcade
     static void TextRenderer(component::Text *textComp, component::Transform *transformComp,
         SDL_Renderer *m_renderer)
     {
-        std::cout << "Text" << std::endl;
+        //std::cout << "Text" << std::endl;
         TTF_Font* Sans = TTF_OpenFont("res/font/OpenSans-Regular.ttf", 24);
         SDL_Color White = {255, 255, 255, 255};
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, textComp->text.c_str(), White);
@@ -241,7 +241,7 @@ namespace arcade
         SDL_Event events;
 
         (void)dt;
-        std::cout << "SDL loop" << std::endl;
+        //std::cout << "SDL loop" << std::endl;
         
         /* SDL Events */
         while (SDL_PollEvent(&events))
@@ -331,7 +331,7 @@ namespace arcade
 
     bool Sdl::quitRequested() const
     {
-        std::cout << "Quit request" << std::endl;
+        //std::cout << "Quit request" << std::endl;
         if (m_isOpen)
             return (false);
         return (true);
