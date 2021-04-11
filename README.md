@@ -76,6 +76,7 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 
 ```sh
 sudo dnf install SDL2-devel
+sudo dnf install SDL2_image SDL2_image-devel SDL2_ttf SDL2_ttf-devel
 ```
 </details>
 <details>
