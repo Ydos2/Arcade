@@ -39,7 +39,7 @@ namespace arcade {
 
         m_map = {
             "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-            "W     W      W  W      W     W",
+            "W     W      W         W     W",
             "W WWW W WWWW W  W WWWW W WWW W",
             "W W     W         W        W W",
             "W W WW WW WW WWWW W WWW WW W W",
@@ -149,7 +149,7 @@ namespace arcade {
         sprite = setSprite(
             16,
             16,
-            Color {(char)255, (char)255, (char)255, (char)0}
+            Color {(char)0, (char)255, (char)0, (char)0}
         );
 
         asciiSprite.height = 1;
