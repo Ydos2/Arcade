@@ -45,9 +45,7 @@ namespace arcade {
                         Color {(char)255, (char)255, (char)255, (char)255}
                     };
 
-                    wallTransform.position.x = col;
-                    wallTransform.position.y = row;
-                    wallTransform.position.z = 0;
+                    wallTransform.position = {col, row, 0};
 
                     wall.addComponent(wallAsciiSprite);
                     wall.addComponent(wallSprite);
@@ -57,16 +55,57 @@ namespace arcade {
         }
     }
 
+    static void initSnake(IScene &scene)
+    {
+        arcade::component::Sprite sprite;
+        arcade::component::AsciiSprite asciiSprite;
+        arcade::component::Transform headTransform;
+        arcade::IEntity &head = scene.newEntity("head");
+
+        sprite.height = 1;
+        sprite.width = 1;
+        sprite.pixels = {
+            Color {(char)255, (char)0, (char)0, (char)255}
+        };
+
+        asciiSprite.height = 1;
+        asciiSprite.width = 1;
+        std::vector<char> vector = {'O'};
+        std::shared_ptr<std::vector<char>> vectorPtr(&vector);
+        asciiSprite.sprite = vectorPtr;
+
+        headTransform.position = {14, 7, 1};
+
+        head.addComponent(asciiSprite);
+        head.addComponent(sprite);
+        head.addComponent(headTransform);
+
+        for (size_t i = 0; i < 3; i++) {
+            arcade::component::Transform tailTransform;
+            arcade::IEntity &tail = scene.newEntity("tail" + std::to_string(i));
+            
+            tailTransform.position = {14, 7 - (i + 1), 1};
+
+            tail.addComponent(asciiSprite);
+            tail.addComponent(sprite);
+            tail.addComponent(tailTransform);
+        }
+    }
+
     void Nibbler::init(IScene &scene)
     {
         std::cout << "Nibbler init" << std::endl;
 
         initMap(scene);
+        initSnake(scene);
 
         // Init snake (4 segments)
             // Position of every segment
             // Its direction
             // Its speed ?
+            
+
+
         // Init food
             // Its position
             // Its sprite
