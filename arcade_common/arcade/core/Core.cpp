@@ -35,13 +35,15 @@ namespace core {
         if (path != "") {
             this->m_libraryManager.add(library::LibraryLoader::load(path));
             this->m_libraryManager.activateFromPath(*scene, path);
+            if (!this->m_libraryManager.getActiveGraphic())
+                return false;
         }
         this->m_libraryManager.add(library::LibraryLoader::loadAll());
         if (!this->m_libraryManager.getActiveGraphic()) {
             this->m_libraryManager.forceActivate(*scene);
         }
-        m_bios = new Bios();
 
+        m_bios = new Bios(*scene, m_libraryManager);
         m_bios->init(*scene);
 
         m_time = std::chrono::system_clock::now();
@@ -69,8 +71,7 @@ namespace core {
 
         tmp_chrono += dt.count();
 
-        if (game)
-            game->update((*scene), dt.count());
+        game->update((*scene), dt.count());
         graph->update((*scene), dt.count());
 
         for (auto iter : scene->pullKeyBoardEvents())
