@@ -54,6 +54,16 @@ namespace scene {
         }
     }
 
+    void SceneManager::clear(std::string name)
+    {
+        for (auto &pair : this->m_scenes) {
+            if (pair.first != name)
+                continue;
+            scene::Scene &scene = static_cast<scene::Scene &>(pair.second);
+            scene.clear();
+        }
+    }
+
 }
 
 }

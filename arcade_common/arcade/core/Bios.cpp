@@ -116,10 +116,29 @@ namespace arcade
             createLibs(m_scene, m_libs);
         }
 
+        void Bios::move(IScene &scene, float dt)
+        {
+            std::vector<std::reference_wrapper<IEntity>> ghost = scene.getEntity("cursor");
+
+            ghost[0].get().forEach([&](arcade::component::IComponent& comp)
+            {
+                try
+                {
+                    float posX = this->m_cursor_column == 0 ? 1 : 19;
+                    float posY = this->m_cursor_index + 1;
+                    component::Transform &ptr = dynamic_cast<component::Transform&>(comp);
+                    ptr.position.x = posX;
+                    ptr.position.y = posY;
+                }
+                catch(const std::exception& e)
+                {
+                }
+            });
+        }
+
         void Bios::update(IScene &scene, float dt)
         {
-            (void)scene;
-            (void)dt;
+            move(scene, dt);
         }
 
         void Bios::end(IScene &scene)
@@ -129,32 +148,65 @@ namespace arcade
 
         void Bios::onKeyEvent(const event::KeyboardEvent& key)
         {
-        if (key.action == key.DOWN)
-        {
-            std::cout << (unsigned long)key.key << std::endl;
-            switch (key.key)
+            if (key.action == key.PRESSED)
             {
-            case event::Key::KEY_ARROW_UP:
-                std::cout << "!" << std::endl;
-                break;
-            case event::Key::KEY_ARROW_DOWN:
-                std::cout << "!" << std::endl;
-                break;
-            case event::Key::KEY_ARROW_LEFT:
-                break;
-            case event::Key::KEY_ARROW_RIGHT:
-                break;
-            default:
-                std::cout << "?" << std::endl;
-                break;
+                std::cout << (unsigned long)key.key << std::endl;
+                switch (key.key)
+                {
+                case event::Key::KEY_ARROW_UP:
+                    this->m_cursor_index -= 1;
+                    if (this->m_cursor_index <= 0) {
+                        this->m_cursor_index = 0;
+                    }
+                    break;
+                case event::Key::KEY_ARROW_DOWN:
+                    this->m_cursor_index += 1;
+                    if (this->m_cursor_column == 0 && this->m_cursor_index >= m_libs.getGames().size()) {
+                        this->m_cursor_index = m_libs.getGames().size() -1;
+                    }
+                    if (this->m_cursor_column == 1 && this->m_cursor_index >= m_libs.getGraphics().size()) {
+                        this->m_cursor_index = m_libs.getGraphics().size() -1;
+                    }
+                    break;
+                case event::Key::KEY_ARROW_LEFT:
+                    this->m_cursor_column = 0;
+                    this->m_cursor_index = 0;
+                    break;
+                case event::Key::KEY_ARROW_RIGHT:
+                    this->m_cursor_column = 1;
+                    this->m_cursor_index = 0;
+                    break;
+                case event::Key::KEY_SPACE:
+                    loadSelected();
+                    break;
+                default:
+                    std::cout << "?" << std::endl;
+                    break;
+                }
             }
         }
 
+        void Bios::loadSelected()
+        {
+            if (m_cursor_column == 0) {
+                for (int i = 0; i < m_libs.getGames().size(); i++) {
+                    if (i == m_cursor_index) {
+                        m_core.launchGame(&m_libs.getGames()[i]);
+                    }
+                }
+            } else {
+                for (int i = 0; i < m_libs.getGraphics().size(); i++) {
+                    if (i == m_cursor_index) {
+                        m_libs.getActiveGraphic()->getLibrary()->end(m_scene);
+                        m_libs.activateFromPath(m_scene, m_libs.getGames()[i].getPath());
+                    }
+                }
+            }
         }
 
         void Bios::onMouseEvent(const event::MouseEvent& mouse)
         {
-            if (mouse.action == mouse.DOWN)
+            /*if (mouse.action == mouse.DOWN)
             {
                 switch (mouse.button)
                 {
@@ -170,7 +222,7 @@ namespace arcade
                 default:
                     break;
                 }
-            }
+            }*/
         }
 
     }

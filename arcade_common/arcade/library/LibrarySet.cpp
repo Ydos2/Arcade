@@ -223,6 +223,30 @@ namespace library {
         return this->m_list.size();
     }
 
+    void LibrarySet::next(scene::Scene &scene)
+    {
+        auto current = getActive();
+        if (!current)
+            return;
+        current->getLibrary()->end(scene);
+        int index = this->getIndexFromPath(current->getPath()) + 1;
+        if (index >= this->m_list.size())
+            index = 0;
+        this->activate(scene, index);
+    }
+
+    void LibrarySet::previous(scene::Scene &scene)
+    {
+        auto current = getActive();
+        if (!current)
+            return;
+        current->getLibrary()->end(scene);
+        int index = this->getIndexFromPath(current->getPath()) + 1;
+        if (index >= this->m_list.size())
+            index = 0;
+        this->activate(scene, index);
+    }
+
 }
 
 }

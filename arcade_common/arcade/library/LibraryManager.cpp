@@ -178,6 +178,26 @@ namespace library {
             return this->m_graphics.size();
         }
 
+        void LibraryManager::nextGame(scene::Scene &scene)
+        {
+            this->m_games.next(scene);
+        }
+
+        void LibraryManager::previousGame(scene::Scene &scene)
+        {
+            this->m_games.previous(scene);
+        }
+    
+        void LibraryManager::nextGraph(scene::Scene &scene)
+        {
+            this->m_graphics.next(scene);
+        }
+
+        void LibraryManager::previousGraph(scene::Scene &scene)
+        {
+            this->m_graphics.previous(scene);
+        }
+
 }
 
 }
