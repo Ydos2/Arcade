@@ -176,8 +176,8 @@ namespace arcade
     {
         //std::cout << "Sprite" << std::endl;
         SDL_Rect rect;
-        rect.x = int(transformComp->position.x);
-        rect.y = int(transformComp->position.y);
+        rect.x = int(transformComp->position.x * 16);
+        rect.y = int(transformComp->position.y * 16);
         rect.w = spriteComp->width;
         rect.h = spriteComp->height;
         SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(spriteComp->pixels.data(),
@@ -188,6 +188,7 @@ namespace arcade
         SDL_RenderCopy(m_renderer, textureSdl, NULL, &rect);
         SDL_SetRenderDrawColor(m_renderer, 47, 97, 0, 255);
         SDL_FreeSurface(surface);
+        SDL_DestroyTexture(textureSdl);
     }
 
     static void TextRenderer(component::Text *textComp, component::Transform *transformComp,
@@ -278,8 +279,8 @@ namespace arcade
         }
 
         SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-        //if(SDL_RenderClear(m_renderer))
-        //    std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
+        if (SDL_RenderClear(m_renderer))
+            std::cout <<  __FILE__ << ":" << __LINE__ << "Warning: Could not clear screen renderer, error: " << SDL_GetError() << std::endl;
 
         sortedEntities = getSortedEntities(scene);
 
@@ -288,7 +289,7 @@ namespace arcade
         component::Transform *transformComp = nullptr;
         component::Sound *soundComp = nullptr;
         component::Text *textComp = nullptr;
-        
+
         for (size_t i = 0; i < sortedEntities.size(); i++)
         {
             sortedEntities[i].get().forEach([&](arcade::component::IComponent& comp)
